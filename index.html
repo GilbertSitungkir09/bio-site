@@ -24,14 +24,15 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            min-height: 100vh;
+            /* Memperbaiki bug halaman melar ke bawah: menggunakan height 100vh dan overflow hidden */
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 30px 20px;
+            padding: 20px;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         /* === LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) === */
@@ -75,7 +76,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* === EFEK SALJU / BINTANG BERJATUHAN (SNOW/STAR EFFECT) === */
+        /* === EFEK SALJU / BINTANG BERJATUHAN (DIPERBAIKI AGAR TIDAK MEMBUAT HALAMAN SCROLL KE BAWAH) === */
         .snowflake {
             position: absolute;
             top: -10px;
@@ -93,8 +94,9 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(105vh) translateX(20px);
-                opacity: 0.2;
+                /* Dibatasi hingga 100vh agar tidak menciptakan ruang kosong ke bawah */
+                transform: translateY(100vh) translateX(20px);
+                opacity: 0.1;
             }
         }
 
@@ -110,22 +112,21 @@
 
         .profile-card {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         /* === BINGKAI FOTO PERSEGI DENGAN EFEK RUNNING LED WARNA-WARNI === */
         .profile-img-container {
             position: relative;
-            width: 180px;  /* Ukuran kotak persegi */
-            height: 180px; 
-            margin: 0 auto 18px auto;
+            width: 160px;  /* Ukuran kotak persegi disesuaikan agar pas di layar tanpa scroll */
+            height: 160px; 
+            margin: 0 auto 14px auto;
             border-radius: 16px;
-            padding: 4px; /* Ketebalan garis berjalan */
+            padding: 4px; 
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        /* Efek Gradient Warna-Warni Berputar Mengelilingi Bingkai */
         .profile-img-container::before {
             content: '';
             position: absolute;
@@ -143,7 +144,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Lapisan dalam tempat foto diletakkan */
         .profile-img-inner {
             position: relative;
             width: 100%;
@@ -154,7 +154,6 @@
             z-index: 2;
         }
 
-        /* FOTO UTAMA: Mengatur agar fokus tampilan mengambil bagian ATAS foto */
         .profile-img-inner img {
             width: 100%;
             height: 100%;
@@ -163,26 +162,28 @@
         }
 
         .profile-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: #222;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .profile-bio {
-            font-size: 12px;
+            font-size: 11px;
             color: #555;
             font-weight: 500;
         }
 
-        /* === KOTAK KOLOM TAUTAN (LINK SECTION) === */
+        /* === KOTAK KOLOM TAUTAN (DENGAN EFEK HOVER ZOOM & 3D TILT) === */
         .links-section {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
+            /* Properti perspective agar efek 3D tilt terlihat nyata */
+            perspective: 1000px; 
         }
 
         .link-item {
@@ -192,18 +193,20 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.9);
-            padding: 14px 20px;
+            padding: 12px 20px;
             border-radius: 16px;
             text-decoration: none;
             color: #222;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            /* Transisi halus untuk efek zoom dan kemiringan 3D */
+            transition: transform 0.15s ease-out, background 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
 
         .link-item:hover {
             background: rgba(255, 255, 255, 0.95);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
         }
 
         .link-icon-box {
@@ -211,6 +214,7 @@
             margin-right: 15px;
             width: 30px;
             text-align: center;
+            transform: translateZ(20px); /* Efek elemen menonjol keluar dalam mode 3D */
         }
 
         .link-icon-box.discord { color: #5865F2; }
@@ -221,6 +225,7 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            transform: translateZ(15px); /* Efek teks ikut menonjol dalam mode 3D */
         }
 
         .link-title {
@@ -238,10 +243,11 @@
             font-size: 12px;
             color: #555;
             transition: transform 0.2s ease;
+            transform: translateZ(10px);
         }
 
         .link-item:hover .link-arrow-icon {
-            transform: translateX(3px);
+            transform: translateX(3px) translateZ(15px);
         }
     </style>
 </head>
@@ -270,7 +276,7 @@
     <!-- Konten Utama -->
     <div class="container">
         
-        <!-- Bagian Profil: Kotak Persegi dengan Bingkai LED & Fokus ke Bagian Atas Foto -->
+        <!-- Bagian Profil -->
         <div class="profile-card">
             <div class="profile-img-container">
                 <div class="profile-img-inner">
@@ -281,9 +287,9 @@
             <p class="profile-bio">YTTA</p>
         </div>
 
-        <!-- Kolom Tautan -->
+        <!-- Kolom Tautan dengan Efek 3D Tilt -->
         <div class="links-section">
-            <a href="https://discord.gg/nUSm4pQnYs" class="link-item" target="_blank">
+            <a href="https://discord.gg/nUSm4pQnYs" class="link-item tilt-card" target="_blank">
                 <div class="link-icon-box discord">
                     <i class="fa-brands fa-discord"></i>
                 </div>
@@ -296,7 +302,7 @@
                 </div>
             </a>
 
-            <a href="https://www.instagram.com/gilbertt_situngkir/" class="link-item" target="_blank">
+            <a href="https://www.instagram.com/gilbertt_situngkir/" class="link-item tilt-card" target="_blank">
                 <div class="link-icon-box instagram">
                     <i class="fa-brands fa-instagram"></i>
                 </div>
@@ -309,7 +315,7 @@
                 </div>
             </a>
 
-            <a href="https://saweria.co/Berrtt/" class="link-item" target="_blank">
+            <a href="https://saweria.co/Berrtt/" class="link-item tilt-card" target="_blank">
                 <div class="link-icon-box saweria">
                     <i class="fa-solid fa-mug-hot"></i>
                 </div>
@@ -325,37 +331,57 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT UNTUK EFEK BINTANG / SALJU BERJATUHAN OTOMATIS -->
+    <!-- SCRIPT JAVASCRIPT UNTUK PARTIKEL DAN EFEK 3D TILT MOUSE -->
     <script>
+        // 1. Memperbaiki Bug Partikel agar tidak membuat halaman melar ke bawah
         function createSnowflake() {
             const snow = document.createElement('div');
             snow.classList.add('snowflake');
             
-            // Ukuran acak butiran salju/bintang
             const size = Math.random() * 4 + 2 + 'px';
             snow.style.width = size;
             snow.style.height = size;
-            
-            // Posisi awal horizontal acak
             snow.style.left = Math.random() * window.innerWidth + 'px';
             
-            // Kecepatan jatuh acak
-            const duration = Math.random() * 5 + 3 + 's';
+            const duration = Math.random() * 4 + 3 + 's';
             snow.style.animationDuration = duration;
-            
-            // Tingkat transparansi acak
             snow.style.opacity = Math.random() * 0.7 + 0.3;
             
             document.body.appendChild(snow);
             
-            // Hapus elemen setelah animasi selesai agar memori tetap ringan
+            // Hapus elemen otomatis setelah jatuh ke bawah layar untuk menghemat memori
             setTimeout(() => {
                 snow.remove();
             }, parseFloat(duration) * 1000);
         }
 
-        // Interval pembuatan partikel salju secara terus-menerus
-        setInterval(createSnowflake, 150);
+        // Batasi frekuensi agar ringan
+        setInterval(createSnowflake, 200);
+
+        // 2. JavaScript untuk Efek Hover Zoom & 3D Tilt interaktif pada kartu link
+        const cards = document.querySelectorAll('.tilt-card');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; // Posisi kursor X di dalam kartu
+                const y = e.clientY - rect.top;  // Posisi kursor Y di dalam kartu
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Menghitung sudut kemiringan 3D dan efek zoom (skala 1.03)
+                const rotateX = ((y - centerY) / centerY) * -10; // Miring atas/bawah
+                const rotateY = ((x - centerX) / centerX) * 10;  // Miring kiri/kanan
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+            });
+
+            // Mengembalikan posisi kartu seperti semula saat kursor keluar
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        });
     </script>
 </body>
 </html>
