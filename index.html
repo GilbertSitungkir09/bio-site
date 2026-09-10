@@ -19,9 +19,7 @@
         }
 
         body {
-            /* Warna dasar krem ala kertas */
             background-color: #d6d0c7;
-            /* Menggunakan gambar tekstur kertas kusut/kuno di latar belakang */
             background-image: url('https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=1200&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -36,7 +34,7 @@
             overflow-x: hidden;
         }
 
-        /* === LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT HORIZONTAL) === */
+        /* === LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) === */
         .bg-running-container {
             position: absolute;
             top: 0;
@@ -44,15 +42,14 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: 0; /* Berada di belakang konten utama */
+            z-index: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            opacity: 0.22; /* Transparansi teks background */
+            opacity: 0.22;
             pointer-events: none;
         }
 
-        /* Baris teks berjalan */
         .bg-running-row {
             display: flex;
             white-space: nowrap;
@@ -78,51 +75,69 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* === KONTRAK UTAMA / WRAPPER WEBSITE === */
+        /* === KONTRAK UTAMA HALAMAN === */
         .container {
             width: 100%;
             max-width: 460px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 2; /* Berada di atas background */
+            z-index: 2;
         }
 
-        /* === BAGIAN FOTO PROFIL (KOTAK PERSEGI DENGAN ANIMASI BINGKAI SAJA) === */
         .profile-card {
             text-align: center;
             margin-bottom: 25px;
         }
 
+        /* === BINGKAI LUAR (HANYA BINGKAI INI YANG BERGERAK) === */
         .profile-img-wrapper {
             width: 140px;
             height: 170px;
-            /* Mengubah bentuk menjadi kotak persegi dengan sedikit lengkungan elegan di sudutnya */
-            border-radius: 12px; 
-            overflow: hidden;
+            border-radius: 12px;
+            /* Menggunakan overflow hidden agar sisi foto di dalam tertutup saat bingkai miring */
+            overflow: hidden; 
             margin: 0 auto 15px auto;
             border: 3px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             background-color: #fff;
             
-            /* ANIMASI BINGKAI BERGERAK KIRI-KANAN PERLAHAN (LAYAKNYA DAUN) */
-            transform-origin: top center; /* Titik tumpu ayunan berada di bagian atas bingkai */
+            /* Titik tumpu ayunan berada di bagian tengah-atas agar efek goyangannya natural */
+            transform-origin: center top; 
             animation: swayFrame 5s ease-in-out infinite;
+            position: relative;
         }
 
-        /* Keyframes animasi goyangan bingkai pelan ke kiri dan ke kanan */
+        /* Animasi miring pelan ke kiri dan ke kanan */
         @keyframes swayFrame {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(-3deg); } /* Miring ke kiri (menutup bagian kanan foto sedikit) */
+            25% { transform: rotate(-4deg); } /* Miring ke kiri (menutupi sebagian sisi kanan foto) */
             50% { transform: rotate(0deg); }
-            75% { transform: rotate(3deg); }  /* Miring ke kanan */
+            75% { transform: rotate(4deg); }  /* Miring ke kanan (menutupi sebagian sisi kiri foto) */
             100% { transform: rotate(0deg); }
         }
 
+        /* === FOTO DI DALAM (POSISI DIAM, BERKEBALIKAN DENGAN BINGKAI) === */
         .profile-img-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            /* Memberikan animasi tandingan berlawanan arah agar foto tetap diam tegak */
+            transform-origin: center top;
+            animation: counterSway 5s ease-in-out infinite;
+        }
+
+        /* Keyframes tandingan agar foto tidak ikut miring */
+        @keyframes counterSway {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(4deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-4deg); }
+            100% { transform: rotate(0deg); }
         }
 
         .profile-name {
@@ -176,7 +191,6 @@
             text-align: center;
         }
 
-        /* Warna khusus ikon platform */
         .link-icon-box.discord { color: #5865F2; }
         .link-icon-box.instagram { color: #E4405F; }
         .link-icon-box.saweria { color: #FFC107; }
@@ -211,9 +225,7 @@
 </head>
 <body>
 
-    <!-- ========================================== -->
-    <!-- LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) -->
-    <!-- ========================================== -->
+    <!-- Latar Belakang Teks Berjalan -->
     <div class="bg-running-container">
         <div class="bg-running-row">
             <span>Gilbertt &bull; Gilbertt &bull; Gilbertt &bull; Gilbertt &bull;</span>
@@ -233,12 +245,10 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- KONTEN UTAMA HALAMAN -->
-    <!-- ========================================== -->
+    <!-- Konten Utama -->
     <div class="container">
         
-        <!-- BAGIAN FOTO PROFIL (BINGKAI PERSEGI DENGAN ANIMASI GOYANG PELAN) -->
+        <!-- Bagian Profil (Bingkai Goyang, Foto Tetap Diam) -->
         <div class="profile-card">
             <div class="profile-img-wrapper">
                 <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop'">
@@ -247,12 +257,8 @@
             <p class="profile-bio">YTTA</p>
         </div>
 
-        <!-- ========================================== -->
-        <!-- KELOMPOK KOLOM TAUTAN (LINK SECTIONS) -->
-        <!-- ========================================== -->
+        <!-- Kolom Tautan -->
         <div class="links-section">
-            
-            <!-- KOTAK KOLOM 1: DISCORD -->
             <a href="https://discord.gg/nUSm4pQnYs" class="link-item" target="_blank">
                 <div class="link-icon-box discord">
                     <i class="fa-brands fa-discord"></i>
@@ -266,7 +272,6 @@
                 </div>
             </a>
 
-            <!-- KOTAK KOLOM 2: INSTAGRAM -->
             <a href="https://www.instagram.com/gilbertt_situngkir/" class="link-item" target="_blank">
                 <div class="link-icon-box instagram">
                     <i class="fa-brands fa-instagram"></i>
@@ -280,20 +285,18 @@
                 </div>
             </a>
 
-            <!-- KOTAK KOLOM 3: SAWERIA -->
             <a href="https://saweria.co/Berrtt/" class="link-item" target="_blank">
                 <div class="link-icon-box saweria">
                     <i class="fa-solid fa-mug-hot"></i>
                 </div>
                 <div class="link-content">
                     <span class="link-title">Saweria / Dukungan</span>
-                    <span class="link-desc">Dukung kreator dengan trakteer kopi</span>
+                    <span class="link-desc">Dukung dengan trakteer kopi</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </a>
-
         </div>
 
     </div>
