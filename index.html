@@ -531,7 +531,7 @@
                 <div class="status-dot" title="Online"></div>
             </div>
             <br>
-            <!-- Bio dengan Efek Ketik Sapaan Waktu Otomatis Sesuai Bahasa Pengunjung -->
+            <!-- Bio dengan Efek Ketik Sapaan Waktu Sesuai Bahasa Pengunjung -->
             <p class="profile-bio typing" id="typewriter-bio"></p>
         </div>
 
@@ -591,17 +591,7 @@
             document.getElementById('dynamic-favicon').href = `data:image/svg+xml,${svgIcon}`;
         }, 1500);
 
-        // 2. Logika Transisi Masuk (Page Loader)
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('page-loader');
-            setTimeout(() => {
-                loader.classList.add('loaded');
-                document.body.classList.add('loaded');
-                setTimeout(typeWriter, 300);
-            }, 600);
-        });
-
-        // 3. Deteksi Bahasa & Jam Real-Time
+        // 2. Deteksi Bahasa & Jam Real-Time
         const userLang = navigator.language || navigator.userLanguage || 'id';
         const isIndonesian = userLang.startsWith('id');
 
@@ -637,20 +627,38 @@
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // 4. Animasi Ketik (Typewriter)
-        const targetGreeting = updateClockAndGreeting();
+        // 3. Logika Animasi Ketik (Typewriter) yang Disinkronkan Setelah Loader Selesai
         const bioElement = document.getElementById('typewriter-bio');
+        let targetGreeting = "";
         let charIndex = 0;
 
         function typeWriter() {
             if (charIndex < targetGreeting.length) {
                 bioElement.innerHTML += targetGreeting.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 80);
+                setTimeout(typeWriter, 80); // Kecepatan ketik per huruf
             } else {
-                bioElement.classList.remove('typing');
+                bioElement.classList.remove('typing'); // Garis kedip hilang otomatis saat selesai
             }
         }
+
+        // 4. Logika Transisi Masuk (Page Loader)
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            
+            // Ambil teks sapaan terbaru saat halaman benar-benar siap
+            targetGreeting = updateClockAndGreeting();
+
+            setTimeout(() => {
+                loader.classList.add('loaded');
+                document.body.classList.add('loaded');
+                
+                // Memicu animasi ketik TEPAT SETELAH tirai loader terangkat naik (sinkron)
+                setTimeout(() => {
+                    typeWriter();
+                }, 400); 
+            }, 600);
+        });
 
         // 5. Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
