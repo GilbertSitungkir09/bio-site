@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio Site - Custom</title>
+    <!-- Memasukkan Font Google (Poppins) untuk tampilan teks yang rapi -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Memasukkan FontAwesome untuk ikon sosial media (Discord, Instagram, dll) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === PENGATURAN DASAR HALAMAN === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            /* Warna dasar latar belakang jika gambar gagal dimuat */
+            background-color: #dcd6cd; 
+            /* Mengatur background tekstur kertas dan pola teks berulang bergeser */
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), 
+                url('https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=1000&auto=format&fit=crop'); /* Contoh tekstur kertas */
+            background-repeat: repeat;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* === EFEK LATAR BELAKANG TEKS BERULANG (BACKGROUND TEXT PATTERN) === */
+        /* Bagian ini meniru teks besar berulang "LEVICHE" di latar belakang gambar pertama */
+        .bg-text-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* Supaya berada di belakang konten utama */
+            opacity: 0.15; /* Membuat teks transparan/samar */
+            pointer-events: none;
+        }
+
+        .bg-row {
+            font-size: 5vw;
+            font-weight: 900;
+            white-space: nowrap;
+            color: #000;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* === KONTEN UTAMA HALAMAN (PROFIL & LINK) === */
+        .container {
+            width: 100%;
+            max-width: 500px; /* Lebar maksimal kotak bio agar pas di HP maupun PC */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+        }
+
+        /* Styling Foto Profil */
+        .profile-pic-container {
+            width: 130px;
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Styling Judul / Nama Akun */
+        .profile-name {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #333;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Styling Barisan Ikon Media Sosial Kecil di Atas */
+        .social-icons {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .social-icons a {
+            color: #333;
+            font-size: 18px;
+            transition: transform 0.2s ease;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2); /* Efek membesar saat kursor diarahkan */
+        }
+
+        /* === KOTAK / KOLOM TAUTAN (LINK BOXES) === */
+        .links-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Jarak antar kolom */
+        }
+
+        /* Styling untuk masing-masing kolom link */
+        .link-card {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.75); /* Warna putih semi-transparan */
+            backdrop-filter: blur(10px); /* Efek kaca buram (blur) */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 20px;
+            border-radius: 16px; /* Membuat sudut kolom melengkung halus */
+            text-decoration: none;
+            color: #222;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* Efek saat kolom disentuh atau kursor diarahkan */
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-3px); /* Kolom sedikit terangkat ke atas */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Bagian ikon di dalam kolom link */
+        .link-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            width: 35px;
+            text-align: center;
+        }
+
+        /* Warna khusus ikon agar sesuai platform */
+        .link-icon.discord { color: #5865F2; }
+        .link-icon.instagram { color: #E4405F; }
+
+        /* Bagian teks / judul di dalam kolom link */
+        .link-text {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .link-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .link-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Bagian ikon panah kecil di sebelah kanan kolom */
+        .link-arrow {
+            font-size: 14px;
+            color: #555;
+            background: rgba(0, 0, 0, 0.05);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LATAR BELAKANG POLA TEKS BERULANG (Bisa diubah teksnya sesuai keinginan) -->
+    <div class="bg-text-pattern">
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+        <div class="bg-row">NAMA ANDA NAMA ANDA NAMA ANDA NAMA ANDA</div>
+    </div>
+
+    <!-- KONTEN UTAMA HALAMAN BIO -->
+    <div class="container">
+        
+        <!-- Bagian Foto Profil (Ganti link gambar di src dengan foto Anda) -->
+        <div class="profile-pic-container">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop" alt="Foto Profil">
+        </div>
+
+        <!-- Judul / Nama Profil di bawah foto -->
+        <div class="profile-name">NAMA AKUN ANDA</div>
+
+        <!-- Ikon Sosial Media Kecil -->
+        <div class="social-icons">
+            <a href="https://instagram.com/username_ig" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://discord.gg/kode_discord" target="_blank"><i class="fa-brands fa-discord"></i></a>
+            <a href="https://youtube.com" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+
+        <!-- Bagian Kolom Tautan / Link (Sesuai permintaan: Discord & Instagram) -->
+        <div class="links-container">
+            
+            <!-- KOLOM 1: DISCORD -->
+            <!-- Ubah tulisan href="..." dengan link invite Discord Anda -->
+            <a href="https://discord.gg/masukkan-link-discord-anda" class="link-card" target="_blank">
+                <div class="link-icon discord">
+                    <i class="fa-brands fa-discord"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Official Discord Server</span>
+                    <span class="link-subtitle">Gabung ke komunitas kami di Discord</span>
+                </div>
+                <div class="link-arrow">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <!-- KOLOM 2: INSTAGRAM -->
+            <!-- Ubah tulisan href="..." dengan link profil Instagram Anda -->
+            <a href="https://instagram.com/masukkan-username-ig-anda" class="link-card" target="_blank">
+                <div class="link-icon instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Instagram Profile</span>
+                    <span class="link-subtitle">Ikuti update keseharian saya di IG</span>
+                </div>
+                <div class="link-arrow">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>
