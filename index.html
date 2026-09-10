@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio Site - Gilbert Situngkir</title>
+    <title id="page-title">Bio Site - Gilbert Situngkir</title>
+    <!-- Custom Favicon Animasi (Emoji Berkedip di Tab Browser) -->
+    <link id="dynamic-favicon" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     <!-- Memuat Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Poppins:wght@450;500;600;700&display=swap" rel="stylesheet">
     <!-- Memuat FontAwesome -->
@@ -85,7 +87,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* === EFEK KONTEN MUNCUL BERTAHAP SETELAH LOADER SELESAI === */
+        /* === EFEK KONTEN MUNCUL BERTAHAP === */
         .container {
             width: 100%;
             max-width: 420px;
@@ -268,7 +270,7 @@
             margin-bottom: 18px;
         }
 
-        /* === BINGKAI FOTO PERSEGI DENGAN EFEK RUNNING LED WARNA-WARNI === */
+        /* === BINGKAI FOTO PERSEGI DENGAN EFEK RUNNING LED WARNA-WARNI & STATUS DOT === */
         .profile-img-container {
             position: relative;
             width: 140px;  
@@ -314,13 +316,35 @@
             object-position: center top; 
         }
 
+        .profile-name-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
         .profile-name {
             font-size: 15px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: #222;
             text-transform: uppercase;
-            margin-bottom: 2px;
+        }
+
+        /* === INDIKATOR STATUS ONLINE (LIVE STATUS DOT) === */
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2ecc71;
+            animation: pulseStatus 1.5s infinite;
+        }
+
+        @keyframes pulseStatus {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
         }
 
         /* === EFEK KETIK (TYPEWRITER) === */
@@ -502,7 +526,11 @@
                     <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop'">
                 </div>
             </div>
-            <h1 class="profile-name">Gilbert Situngkir</h1>
+            <div class="profile-name-wrapper">
+                <h1 class="profile-name">Gilbert Situngkir</h1>
+                <div class="status-dot" title="Online"></div>
+            </div>
+            <br>
             <!-- Bio dengan Efek Ketik Sapaan Waktu Otomatis Sesuai Bahasa Pengunjung -->
             <p class="profile-bio typing" id="typewriter-bio"></p>
         </div>
@@ -553,18 +581,27 @@
 
     <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // 1. Logika Transisi Masuk (Page Loader)
+        // 1. Logika Custom Favicon Animasi (Emoji Berkedip di Tab Browser)
+        const faviconEmojis = ['⚡', '💻', '🟢', '✨'];
+        let emojiIndex = 0;
+        setInterval(() => {
+            emojiIndex = (emojiIndex + 1) % faviconEmojis.length;
+            const currentEmoji = faviconEmojis[emojiIndex];
+            const svgIcon = `<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${currentEmoji}</text></svg>`;
+            document.getElementById('dynamic-favicon').href = `data:image/svg+xml,${svgIcon}`;
+        }, 1500);
+
+        // 2. Logika Transisi Masuk (Page Loader)
         window.addEventListener('load', () => {
             const loader = document.getElementById('page-loader');
             setTimeout(() => {
                 loader.classList.add('loaded');
                 document.body.classList.add('loaded');
-                // Mulai animasi ketik setelah loader terangkat naik
                 setTimeout(typeWriter, 300);
-            }, 600); // Durasi loader tampil sebentar (600ms)
+            }, 600);
         });
 
-        // 2. Deteksi Bahasa & Jam Real-Time
+        // 3. Deteksi Bahasa & Jam Real-Time
         const userLang = navigator.language || navigator.userLanguage || 'id';
         const isIndonesian = userLang.startsWith('id');
 
@@ -600,7 +637,7 @@
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // 3. Animasi Ketik (Typewriter)
+        // 4. Animasi Ketik (Typewriter)
         const targetGreeting = updateClockAndGreeting();
         const bioElement = document.getElementById('typewriter-bio');
         let charIndex = 0;
@@ -615,7 +652,7 @@
             }
         }
 
-        // 4. Kursor Kustom & Spotlight (Khusus PC)
+        // 5. Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
