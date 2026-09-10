@@ -16,7 +16,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            cursor: none;
         }
 
         body {
@@ -25,7 +24,6 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            /* Perbaikan bug melar: Menggunakan min-height 100vh dan overflow hidden untuk mencegah scroll ganda/melar ke bawah */
             min-height: 100vh;
             width: 100vw;
             display: flex;
@@ -38,49 +36,63 @@
             user-select: none;
         }
 
-        /* === AMBIENT GLOW / SPOTLIGHT === */
-        .ambient-spotlight {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            transition: width 0.3s, height 0.3s;
+        /* === EFEK KHUSUS PC/LAPTOPS (DI HP AKAN OTOMATIS DINONAKTIFKAN) === */
+        @media (hover: hover) and (pointer: fine) {
+            * {
+                cursor: none; /* Menyembunyikan kursor default hanya di PC/Laptop */
+            }
+
+            /* Ambient Glow / Spotlight khusus PC */
+            .ambient-spotlight {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 400px;
+                height: 400px;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                transform: translate(-50%, -50%);
+                z-index: 1;
+                transition: width 0.3s, height 0.3s;
+            }
+
+            /* Kursor Kustom Titik & Cincin khusus PC */
+            .cursor-dot {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 8px;
+                height: 8px;
+                background-color: #ffffff;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.2s, height 0.2s, background-color 0.2s;
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            }
+
+            .cursor-ring {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 36px;
+                height: 36px;
+                border: 2px solid rgba(255, 255, 255, 0.6);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s ease-out, height 0.3s ease-out, border-color 0.3s ease;
+            }
         }
 
-        /* === KURSOR KUSTOM PROFESIONAL === */
-        .cursor-dot {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 8px;
-            height: 8px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-        }
-
-        .cursor-ring {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 36px;
-            height: 36px;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease-out, height 0.3s ease-out, border-color 0.3s ease;
+        /* Jika dibuka di HP (Touch Screen), elemen kustom kursor disembunyikan total */
+        @media (hover: none) and (pointer: coarse) {
+            .ambient-spotlight, .cursor-dot, .cursor-ring {
+                display: none !important;
+            }
         }
 
         /* === CLICK RIPPLE EFFECT === */
@@ -142,7 +154,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* === EFEK SALJU / BINTANG BERJATUHAN (DIBATASI DI DALAM LAYAR) === */
+        /* === EFEK SALJU / BINTANG BERJATUHAN === */
         .snowflake {
             position: absolute;
             top: -10px;
@@ -159,7 +171,7 @@
             100% { transform: translateY(100vh) translateX(20px); opacity: 0.1; }
         }
 
-        /* === KONTRAK UTAMA HALAMAN (RESPONSIF & ANTI MELAR) === */
+        /* === KONTRAK UTAMA HALAMAN === */
         .container {
             width: 100%;
             max-width: 420px;
@@ -167,7 +179,6 @@
             flex-direction: column;
             align-items: center;
             z-index: 2;
-            /* Mencegah elemen dalam container melar atau mendesak ke bawah */
             max-height: 95vh;
             justify-content: center;
         }
@@ -310,7 +321,7 @@
             transform: translateX(3px) translateZ(15px);
         }
 
-        /* === MEDIA QUERY UNTUK LAYAR KECIL / HP === */
+        /* === MEDIA QUERY KHUSUS HP === */
         @media (max-width: 480px) {
             body {
                 height: 100vh;
@@ -424,27 +435,48 @@
         let ringX = 0, ringY = 0;
         let spotX = 0, spotY = 0;
 
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            dot.style.left = `${mouseX}px`;
-            dot.style.top = `${mouseY}px`;
-        });
+        // Hanya jalankan animasi kursor jika perangkat menggunakan mouse (PC/Laptop)
+        const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-        function renderCursor() {
-            ringX += (mouseX - ringX) * 0.15;
-            ringY += (mouseY - ringY) * 0.15;
-            ring.style.left = `${ringX}px`;
-            ring.style.top = `${ringY}px`;
+        if (isDesktop) {
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.left = `${mouseX}px`;
+                dot.style.top = `${mouseY}px`;
+            });
 
-            spotX += (mouseX - spotX) * 0.08;
-            spotY += (mouseY - spotY) * 0.08;
-            spotlight.style.left = `${spotX}px`;
-            spotlight.style.top = `${spotY}px`;
-            
-            requestAnimationFrame(renderCursor);
+            function renderCursor() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                ring.style.left = `${ringX}px`;
+                ring.style.top = `${ringY}px`;
+
+                spotX += (mouseX - spotX) * 0.08;
+                spotY += (mouseY - spotY) * 0.08;
+                spotlight.style.left = `${spotX}px`;
+                spotlight.style.top = `${spotY}px`;
+                
+                requestAnimationFrame(renderCursor);
+            }
+            renderCursor();
+
+            const interactables = document.querySelectorAll('a, .tilt-card');
+            interactables.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    ring.style.width = '55px';
+                    ring.style.height = '55px';
+                    ring.style.borderColor = 'rgba(255, 215, 0, 0.9)';
+                    dot.style.backgroundColor = '#ffd700';
+                });
+                el.addEventListener('mouseleave', () => {
+                    ring.style.width = '36px';
+                    ring.style.height = '36px';
+                    ring.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+                    dot.style.backgroundColor = '#ffffff';
+                });
+            });
         }
-        renderCursor();
 
         window.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
@@ -456,22 +488,6 @@
             setTimeout(() => {
                 ripple.remove();
             }, 600);
-        });
-
-        const interactables = document.querySelectorAll('a, .tilt-card');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                ring.style.width = '55px';
-                ring.style.height = '55px';
-                ring.style.borderColor = 'rgba(255, 215, 0, 0.9)';
-                dot.style.backgroundColor = '#ffd700';
-            });
-            el.addEventListener('mouseleave', () => {
-                ring.style.width = '36px';
-                ring.style.height = '36px';
-                ring.style.borderColor = 'rgba(255, 255, 255, 0.6)';
-                dot.style.backgroundColor = '#ffffff';
-            });
         });
 
         function createSnowflake() {
