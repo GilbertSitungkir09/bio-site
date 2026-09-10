@@ -16,7 +16,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            cursor: none; /* Menyembunyikan kursor default */
+            cursor: none;
         }
 
         body {
@@ -25,18 +25,20 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            /* Perbaikan bug melar: Menggunakan min-height 100vh dan overflow hidden untuk mencegah scroll ganda/melar ke bawah */
             min-height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
             position: relative;
-            overflow-x: hidden;
-            user-select: min;
+            overflow: hidden;
+            user-select: none;
         }
 
-        /* === AMBIENT GLOW / SPOTLIGHT (CAHAYA MENGIKUTI KURSOR) === */
+        /* === AMBIENT GLOW / SPOTLIGHT === */
         .ambient-spotlight {
             position: fixed;
             top: 0;
@@ -51,7 +53,7 @@
             transition: width 0.3s, height 0.3s;
         }
 
-        /* === KURSOR KUSTOM PROFESIONAL (SMOOTH FOLLOWER & RING) === */
+        /* === KURSOR KUSTOM PROFESIONAL === */
         .cursor-dot {
             position: fixed;
             top: 0;
@@ -81,7 +83,7 @@
             transition: width 0.3s ease-out, height 0.3s ease-out, border-color 0.3s ease;
         }
 
-        /* === CLICK RIPPLE EFFECT (EFEK GELOMBANG AIR SAAT DIKLIK) === */
+        /* === CLICK RIPPLE EFFECT === */
         .ripple {
             position: absolute;
             width: 20px;
@@ -95,16 +97,8 @@
         }
 
         @keyframes rippleEffect {
-            0% {
-                width: 0px;
-                height: 0px;
-                opacity: 1;
-            }
-            100% {
-                width: 100px;
-                height: 100px;
-                opacity: 0;
-            }
+            0% { width: 0px; height: 0px; opacity: 1; }
+            100% { width: 100px; height: 100px; opacity: 0; }
         }
 
         /* === LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) === */
@@ -148,7 +142,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* === EFEK SALJU / BINTANG BERJATUHAN (AMAN DI HP) === */
+        /* === EFEK SALJU / BINTANG BERJATUHAN (DIBATASI DI DALAM LAYAR) === */
         .snowflake {
             position: absolute;
             top: -10px;
@@ -161,37 +155,34 @@
         }
 
         @keyframes fall {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(105vh) translateX(20px);
-                opacity: 0.1;
-            }
+            0% { transform: translateY(0) translateX(0); opacity: 1; }
+            100% { transform: translateY(100vh) translateX(20px); opacity: 0.1; }
         }
 
-        /* === KONTRAK UTAMA HALAMAN (RESPONSIF HP) === */
+        /* === KONTRAK UTAMA HALAMAN (RESPONSIF & ANTI MELAR) === */
         .container {
             width: 100%;
-            max-width: 460px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
             align-items: center;
             z-index: 2;
+            /* Mencegah elemen dalam container melar atau mendesak ke bawah */
+            max-height: 95vh;
+            justify-content: center;
         }
 
         .profile-card {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         /* === BINGKAI FOTO PERSEGI DENGAN EFEK RUNNING LED WARNA-WARNI === */
         .profile-img-container {
             position: relative;
-            width: 160px;  
-            height: 160px; 
-            margin: 0 auto 14px auto;
+            width: 140px;  
+            height: 140px; 
+            margin: 0 auto 12px auto;
             border-radius: 16px;
             padding: 4px; 
             overflow: hidden;
@@ -252,7 +243,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             perspective: 1000px; 
         }
 
@@ -263,8 +254,8 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.9);
-            padding: 12px 20px;
-            border-radius: 16px;
+            padding: 10px 18px;
+            border-radius: 14px;
             text-decoration: none;
             color: #222;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
@@ -279,9 +270,9 @@
         }
 
         .link-icon-box {
-            font-size: 22px;
-            margin-right: 15px;
-            width: 30px;
+            font-size: 20px;
+            margin-right: 12px;
+            width: 28px;
             text-align: center;
             transform: translateZ(20px);
         }
@@ -298,18 +289,18 @@
         }
 
         .link-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #1a1a1a;
         }
 
         .link-desc {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
         }
 
         .link-arrow-icon {
-            font-size: 12px;
+            font-size: 11px;
             color: #555;
             transition: transform 0.2s ease;
             transform: translateZ(10px);
@@ -319,29 +310,28 @@
             transform: translateX(3px) translateZ(15px);
         }
 
-        /* === MEDIA QUERY KHUSUS HP (AGAR TIDAK KAKU) === */
+        /* === MEDIA QUERY UNTUK LAYAR KECIL / HP === */
         @media (max-width: 480px) {
             body {
-                height: auto;
-                min-height: 100vh;
+                height: 100vh;
                 padding: 15px;
             }
             .container {
                 max-width: 100%;
             }
             .profile-img-container {
-                width: 140px;
-                height: 140px;
+                width: 120px;
+                height: 120px;
             }
             .link-item {
-                padding: 10px 16px;
+                padding: 9px 14px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Elemen Ambient Glow / Spotlight & Kursor Kustom -->
+    <!-- Elemen Visual Tambahan -->
     <div class="ambient-spotlight" id="ambient-spotlight"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
@@ -424,7 +414,7 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT: KURSOR KUSTOM, SPOTLIGHT, RIPPLE & 3D TILT -->
+    <!-- SCRIPT JAVASCRIPT -->
     <script>
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
@@ -437,12 +427,10 @@
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            
             dot.style.left = `${mouseX}px`;
             dot.style.top = `${mouseY}px`;
         });
 
-        // Animasi pergerakan halus untuk Ring kursor & Ambient Spotlight
         function renderCursor() {
             ringX += (mouseX - ringX) * 0.15;
             ringY += (mouseY - ringY) * 0.15;
@@ -458,7 +446,6 @@
         }
         renderCursor();
 
-        // Click Ripple Effect (Gelombang air saat layar diklik)
         window.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
             ripple.classList.add('ripple');
@@ -471,7 +458,6 @@
             }, 600);
         });
 
-        // Interaksi kursor saat mendekati elemen tombol/link
         const interactables = document.querySelectorAll('a, .tilt-card');
         interactables.forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -488,7 +474,6 @@
             });
         });
 
-        // Partikel Salju/Bintang
         function createSnowflake() {
             const snow = document.createElement('div');
             snow.classList.add('snowflake');
@@ -508,11 +493,9 @@
                 snow.remove();
             }, parseFloat(duration) * 1000);
         }
-        setInterval(createSnowflake, 200);
+        setInterval(createSnowflake, 300);
 
-        // Efek 3D Tilt pada Kartu Link
         const cards = document.querySelectorAll('.tilt-card');
-
         cards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
