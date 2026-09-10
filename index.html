@@ -627,36 +627,42 @@
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // 3. Logika Animasi Ketik (Typewriter) yang Disinkronkan Setelah Loader Selesai
+        // 3. Logika Animasi Ketik (Typewriter) dengan Mulai dari Kosong Bersih
         const bioElement = document.getElementById('typewriter-bio');
         let targetGreeting = "";
         let charIndex = 0;
 
         function typeWriter() {
+            if (charIndex === 0) {
+                bioElement.innerHTML = ""; // Pastikan benar-benar kosong saat dimulai
+            }
+            
             if (charIndex < targetGreeting.length) {
                 bioElement.innerHTML += targetGreeting.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 80); // Kecepatan ketik per huruf
+                setTimeout(typeWriter, 90); // Kecepatan ketik per huruf
             } else {
-                bioElement.classList.remove('typing'); // Garis kedip hilang otomatis saat selesai
+                bioElement.classList.remove('typing'); // Garis berkedip hilang otomatis saat selesai
             }
         }
 
-        // 4. Logika Transisi Masuk (Page Loader)
+        // 4. Logika Transisi Masuk (Page Loader) dengan Jeda Sinkronisasi Sempurna
         window.addEventListener('load', () => {
             const loader = document.getElementById('page-loader');
             
-            // Ambil teks sapaan terbaru saat halaman benar-benar siap
+            // Ambil teks sapaan terbaru
             targetGreeting = updateClockAndGreeting();
 
             setTimeout(() => {
+                // Tirai loader mulai terangkat naik
                 loader.classList.add('loaded');
                 document.body.classList.add('loaded');
                 
-                // Memicu animasi ketik TEPAT SETELAH tirai loader terangkat naik (sinkron)
+                // Jeda waktu (800ms) diberikan agar tirai terbuka sepenuhnya bersih 
+                // sebelum huruf pertama dari sapaan mulai diketik dari kosong.
                 setTimeout(() => {
                     typeWriter();
-                }, 400); 
+                }, 800); 
             }, 600);
         });
 
