@@ -36,6 +36,75 @@
             user-select: none;
         }
 
+        /* === TRANSISI MASUK HALAMAN: PROFESSIONAL PAGE LOADER (CURTAIN REVEAL) === */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #161616;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .page-loader.loaded {
+            transform: translateY(-100%);
+        }
+
+        .loader-brand {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeInLoader 0.5s ease forwards 0.2s;
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #ffd700;
+            border-radius: 50%;
+            animation: spinLoader 0.8s linear infinite;
+        }
+
+        @keyframes fadeInLoader {
+            to { opacity: 1; }
+        }
+
+        @keyframes spinLoader {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* === EFEK KONTEN MUNCUL BERTAHAP SETELAH LOADER SELESAI === */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            max-height: 95vh;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s;
+        }
+
+        body.loaded .container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* === EFEK KHUSUS PC/LAPTOPS === */
         @media (hover: hover) and (pointer: fine) {
             * { cursor: none; }
@@ -166,18 +235,6 @@
             100% { transform: translateY(100vh) translateX(20px); opacity: 0.1; }
         }
 
-        /* === KONTRAK UTAMA HALAMAN === */
-        .container {
-            width: 100%;
-            max-width: 420px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 2;
-            max-height: 95vh;
-            justify-content: center;
-        }
-
         /* === WIDGET JAM DIGITAL & ZONA WAKTU LOKAL === */
         .live-clock-box {
             display: flex;
@@ -266,7 +323,7 @@
             margin-bottom: 2px;
         }
 
-        /* === EFEK KETIK (TYPEWRITER) - SAPAAN OTOMATIS BERDASARKAN BAHASA PENGUNJUNG === */
+        /* === EFEK KETIK (TYPEWRITER) === */
         .profile-bio {
             font-size: 11px;
             color: #555;
@@ -286,7 +343,7 @@
             50% { border-color: #555; }
         }
 
-        /* === KOTAK KOLOM TAUTAN (DENGAN EFEK HOVER ZOOM & 3D TILT) === */
+        /* === KOTAK KOLOM TAUTAN (3D TILT & CARD SHINE) === */
         .links-section {
             width: 100%;
             display: flex;
@@ -296,6 +353,8 @@
         }
 
         .link-item {
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             background: rgba(255, 255, 255, 0.75);
@@ -315,6 +374,23 @@
         .link-item:hover {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .link-item::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(0deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg) translateY(-100%);
+            transition: transform 0.6s ease;
+            pointer-events: none;
+        }
+
+        .link-item:hover::after {
+            transform: rotate(45deg) translateY(100%);
         }
 
         .link-icon-box {
@@ -378,6 +454,12 @@
     </style>
 </head>
 <body>
+
+    <!-- Professional Page Loader / Transisi Masuk Halaman -->
+    <div class="page-loader" id="page-loader">
+        <div class="loader-brand">GILBERTT.</div>
+        <div class="loader-spinner"></div>
+    </div>
 
     <!-- Elemen Visual Tambahan -->
     <div class="ambient-spotlight" id="ambient-spotlight"></div>
@@ -469,13 +551,23 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT: DETEKSI BAHASA & ZONA WAKTU LOKAL PENGUNJUNG -->
+    <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // Deteksi apakah perangkat pengunjung menggunakan Bahasa Indonesia atau Bahasa Lain (Inggris, dll)
+        // 1. Logika Transisi Masuk (Page Loader)
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            setTimeout(() => {
+                loader.classList.add('loaded');
+                document.body.classList.add('loaded');
+                // Mulai animasi ketik setelah loader terangkat naik
+                setTimeout(typeWriter, 300);
+            }, 600); // Durasi loader tampil sebentar (600ms)
+        });
+
+        // 2. Deteksi Bahasa & Jam Real-Time
         const userLang = navigator.language || navigator.userLanguage || 'id';
         const isIndonesian = userLang.startsWith('id');
 
-        // Fungsi Jam Digital Real-Time Sesuai Zona Waktu Lokal Perangkat Pengunjung
         function updateClockAndGreeting() {
             const now = new Date();
             
@@ -483,13 +575,11 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
-            // Format tanggal menyesuaikan bahasa perangkat pengunjung
             const options = { weekday: 'short', day: 'numeric', month: 'short' };
             const dateStr = now.toLocaleDateString(userLang, options);
             
             document.getElementById('live-clock').innerText = `${dateStr} • ${hours}:${minutes}:${seconds}`;
 
-            // Menentukan Sapaan Berdasarkan Waktu Lokal & Bahasa Pengunjung
             const hr = now.getHours();
             let greeting = "";
 
@@ -510,7 +600,7 @@
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // Animasi Ketik (Typewriter) untuk Sapaan Waktu
+        // 3. Animasi Ketik (Typewriter)
         const targetGreeting = updateClockAndGreeting();
         const bioElement = document.getElementById('typewriter-bio');
         let charIndex = 0;
@@ -521,15 +611,11 @@
                 charIndex++;
                 setTimeout(typeWriter, 80);
             } else {
-                bioElement.classList.remove('typing'); // Garis berkedip hilang otomatis saat teks selesai
+                bioElement.classList.remove('typing');
             }
         }
-        
-        window.addEventListener('load', () => {
-            setTimeout(typeWriter, 500);
-        });
 
-        // Logika Kursor Kustom & Spotlight (Khusus PC)
+        // 4. Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
