@@ -16,7 +16,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            cursor: none; /* Menyembunyikan kursor default agar diganti kursor kustom profesional */
+            cursor: none; /* Menyembunyikan kursor default */
         }
 
         body {
@@ -25,15 +25,30 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
             position: relative;
-            overflow: hidden;
-            user-select: none; 
+            overflow-x: hidden;
+            user-select: min;
+        }
+
+        /* === AMBIENT GLOW / SPOTLIGHT (CAHAYA MENGIKUTI KURSOR) === */
+        .ambient-spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: width 0.3s, height 0.3s;
         }
 
         /* === KURSOR KUSTOM PROFESIONAL (SMOOTH FOLLOWER & RING) === */
@@ -64,6 +79,32 @@
             z-index: 9998;
             transform: translate(-50%, -50%);
             transition: width 0.3s ease-out, height 0.3s ease-out, border-color 0.3s ease;
+        }
+
+        /* === CLICK RIPPLE EFFECT (EFEK GELOMBANG AIR SAAT DIKLIK) === */
+        .ripple {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: rippleEffect 0.6s linear forwards;
+            z-index: 9997;
+        }
+
+        @keyframes rippleEffect {
+            0% {
+                width: 0px;
+                height: 0px;
+                opacity: 1;
+            }
+            100% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+            }
         }
 
         /* === LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) === */
@@ -107,7 +148,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* === EFEK PARTIKEL SALJU / BINTANG BERJATUHAN === */
+        /* === EFEK SALJU / BINTANG BERJATUHAN (AMAN DI HP) === */
         .snowflake {
             position: absolute;
             top: -10px;
@@ -125,12 +166,12 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(100vh) translateX(20px);
+                transform: translateY(105vh) translateX(20px);
                 opacity: 0.1;
             }
         }
 
-        /* === KONTRAK UTAMA HALAMAN === */
+        /* === KONTRAK UTAMA HALAMAN (RESPONSIF HP) === */
         .container {
             width: 100%;
             max-width: 460px;
@@ -277,11 +318,31 @@
         .link-item:hover .link-arrow-icon {
             transform: translateX(3px) translateZ(15px);
         }
+
+        /* === MEDIA QUERY KHUSUS HP (AGAR TIDAK KAKU) === */
+        @media (max-width: 480px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                padding: 15px;
+            }
+            .container {
+                max-width: 100%;
+            }
+            .profile-img-container {
+                width: 140px;
+                height: 140px;
+            }
+            .link-item {
+                padding: 10px 16px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Elemen Kursor Kustom Profesional -->
+    <!-- Elemen Ambient Glow / Spotlight & Kursor Kustom -->
+    <div class="ambient-spotlight" id="ambient-spotlight"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
 
@@ -363,37 +424,54 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT: KURSOR KUSTOM, PARTIKEL & 3D TILT -->
+    <!-- SCRIPT JAVASCRIPT: KURSOR KUSTOM, SPOTLIGHT, RIPPLE & 3D TILT -->
     <script>
-        // 1. Logika Kursor Kustom Profesional (Smooth Follower Ring & Dot)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
+        const spotlight = document.getElementById('ambient-spotlight');
 
         let mouseX = 0, mouseY = 0;
         let ringX = 0, ringY = 0;
+        let spotX = 0, spotY = 0;
 
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
             
-            // Titik utama langsung mengikuti kursor tanpa jeda
             dot.style.left = `${mouseX}px`;
             dot.style.top = `${mouseY}px`;
         });
 
-        // Animasi pergerakan cincin pengekor secara halus (smooth easing)
+        // Animasi pergerakan halus untuk Ring kursor & Ambient Spotlight
         function renderCursor() {
             ringX += (mouseX - ringX) * 0.15;
             ringY += (mouseY - ringY) * 0.15;
-            
             ring.style.left = `${ringX}px`;
             ring.style.top = `${ringY}px`;
+
+            spotX += (mouseX - spotX) * 0.08;
+            spotY += (mouseY - spotY) * 0.08;
+            spotlight.style.left = `${spotX}px`;
+            spotlight.style.top = `${spotY}px`;
             
             requestAnimationFrame(renderCursor);
         }
         renderCursor();
 
-        // Efek membesar saat kursor menyentuh elemen interaktif (link/kartu)
+        // Click Ripple Effect (Gelombang air saat layar diklik)
+        window.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.classList.add('ripple');
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+
+        // Interaksi kursor saat mendekati elemen tombol/link
         const interactables = document.querySelectorAll('a, .tilt-card');
         interactables.forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -410,7 +488,7 @@
             });
         });
 
-        // 2. Partikel Salju/Bintang Aman Tanpa Bug Halaman Melar
+        // Partikel Salju/Bintang
         function createSnowflake() {
             const snow = document.createElement('div');
             snow.classList.add('snowflake');
@@ -432,7 +510,7 @@
         }
         setInterval(createSnowflake, 200);
 
-        // 3. Efek Hover Zoom & 3D Tilt pada Kartu Link
+        // Efek 3D Tilt pada Kartu Link
         const cards = document.querySelectorAll('.tilt-card');
 
         cards.forEach(card => {
