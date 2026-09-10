@@ -93,8 +93,8 @@
         /* === BINGKAI FOTO PERSEGI DENGAN EFEK RUNNING LED WARNA-WARNI === */
         .profile-img-container {
             position: relative;
-            width: 180px;  /* Ukuran foto dibuat lebih besar */
-            height: 180px; /* Persegi simetris (1:1) */
+            width: 180px;  /* Ukuran kotak persegi */
+            height: 180px; 
             margin: 0 auto 18px auto;
             border-radius: 16px;
             padding: 4px; /* Ketebalan garis berjalan */
@@ -115,13 +115,12 @@
             z-index: 1;
         }
 
-        /* Keyframes untuk memutar lampu LED mengelilingi kotak */
         @keyframes rotateLed {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* Lapisan dalam tempat foto diletakkan agar tetap diam dan rapi berbentuk persegi */
+        /* Lapisan dalam tempat foto diletakkan */
         .profile-img-inner {
             position: relative;
             width: 100%;
@@ -132,10 +131,13 @@
             z-index: 2;
         }
 
+        /* FOTO UTAMA: Mengatur agar fokus tampilan mengambil bagian ATAS foto */
         .profile-img-inner img {
             width: 100%;
             height: 100%;
+            /* 'object-position: center top' memastikan bagian atas foto yang selalu ditampilkan di dalam kotak persegi */
             object-fit: cover;
+            object-position: center top; 
         }
 
         .profile-name {
@@ -246,7 +248,7 @@
     <!-- Konten Utama -->
     <div class="container">
         
-        <!-- Bagian Profil: Kotak Persegi Lebih Besar dengan Efek Bingkai Running LED Warna-Warni -->
+        <!-- Bagian Profil: Kotak Persegi dengan Bingkai LED & Fokus ke Bagian Atas Foto -->
         <div class="profile-card">
             <div class="profile-img-container">
                 <div class="profile-img-inner">
