@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio Site - Gilbert Situngkir</title>
-    <!-- Memuat Google Fonts (Poppins & Fira Code untuk jam digital) -->
+    <!-- Memuat Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Poppins:wght@450;500;600;700&display=swap" rel="stylesheet">
-    <!-- Memuat FontAwesome untuk ikon media sosial -->
+    <!-- Memuat FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -178,7 +178,7 @@
             justify-content: center;
         }
 
-        /* === WIDGET JAM DIGITAL & SAPAAN DI ATAS PROFIL === */
+        /* === WIDGET JAM DIGITAL & ZONA WAKTU LOKAL === */
         .live-clock-box {
             display: flex;
             align-items: center;
@@ -266,7 +266,7 @@
             margin-bottom: 2px;
         }
 
-        /* === EFEK KETIK (TYPEWRITER) - GARIS BERKEDIP HILANG SETELAH SELESAI === */
+        /* === EFEK KETIK (TYPEWRITER) - SAPAAN OTOMATIS BERDASARKAN BAHASA PENGUNJUNG === */
         .profile-bio {
             font-size: 11px;
             color: #555;
@@ -407,10 +407,10 @@
     <!-- Konten Utama -->
     <div class="container">
         
-        <!-- WIDGET JAM DIGITAL & TANGGAL (POSISI DI ATAS PROFIL) -->
+        <!-- WIDGET JAM DIGITAL & ZONA WAKTU LOKAL PENGUNJUNG -->
         <div class="live-clock-box">
             <i class="fa-regular fa-clock"></i>
-            <span class="clock-text" id="live-clock">Memuat Waktu...</span>
+            <span class="clock-text" id="live-clock">Loading Time...</span>
         </div>
 
         <!-- Bagian Profil -->
@@ -421,7 +421,7 @@
                 </div>
             </div>
             <h1 class="profile-name">Gilbert Situngkir</h1>
-            <!-- Bio dengan Efek Ketik Sapaan Waktu (Kelas 'typing' aktif saat mengetik) -->
+            <!-- Bio dengan Efek Ketik Sapaan Waktu Otomatis Sesuai Bahasa Pengunjung -->
             <p class="profile-bio typing" id="typewriter-bio"></p>
         </div>
 
@@ -469,9 +469,13 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT -->
+    <!-- SCRIPT JAVASCRIPT: DETEKSI BAHASA & ZONA WAKTU LOKAL PENGUNJUNG -->
     <script>
-        // 1. Logika Jam Digital Real-Time & Sapaan Waktu Otomatis
+        // Deteksi apakah perangkat pengunjung menggunakan Bahasa Indonesia atau Bahasa Lain (Inggris, dll)
+        const userLang = navigator.language || navigator.userLanguage || 'id';
+        const isIndonesian = userLang.startsWith('id');
+
+        // Fungsi Jam Digital Real-Time Sesuai Zona Waktu Lokal Perangkat Pengunjung
         function updateClockAndGreeting() {
             const now = new Date();
             
@@ -479,26 +483,34 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
+            // Format tanggal menyesuaikan bahasa perangkat pengunjung
             const options = { weekday: 'short', day: 'numeric', month: 'short' };
-            const dateStr = now.toLocaleDateString('id-ID', options);
+            const dateStr = now.toLocaleDateString(userLang, options);
             
             document.getElementById('live-clock').innerText = `${dateStr} • ${hours}:${minutes}:${seconds}`;
 
+            // Menentukan Sapaan Berdasarkan Waktu Lokal & Bahasa Pengunjung
             const hr = now.getHours();
-            let greeting = "Selamat Malam 🌙";
-            if (hr >= 4 && hr < 11) {
-                greeting = "Selamat Pagi 🌅";
-            } else if (hr >= 11 && hr < 15) {
-                greeting = "Selamat Siang ☀️";
-            } else if (hr >= 15 && hr < 18) {
-                greeting = "Selamat Sore 🌤️";
+            let greeting = "";
+
+            if (isIndonesian) {
+                if (hr >= 4 && hr < 11) greeting = "Selamat Pagi 🌅";
+                else if (hr >= 11 && hr < 15) greeting = "Selamat Siang ☀️";
+                else if (hr >= 15 && hr < 18) greeting = "Selamat Sore 🌤️";
+                else greeting = "Selamat Malam 🌙";
+            } else {
+                if (hr >= 4 && hr < 12) greeting = "Good Morning 🌅";
+                else if (hr >= 12 && hr < 17) greeting = "Good Afternoon ☀️";
+                else if (hr >= 17 && hr < 21) greeting = "Good Evening 🌤️";
+                else greeting = "Good Night 🌙";
             }
+
             return greeting;
         }
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // 2. Animasi Ketik (Typewriter) & Menghilangkan Garis Setelah Selesai
+        // Animasi Ketik (Typewriter) untuk Sapaan Waktu
         const targetGreeting = updateClockAndGreeting();
         const bioElement = document.getElementById('typewriter-bio');
         let charIndex = 0;
@@ -509,8 +521,7 @@
                 charIndex++;
                 setTimeout(typeWriter, 80);
             } else {
-                // Menghapus kelas 'typing' agar garis vertikal/kursor berkedip otomatis hilang saat teks selesai
-                bioElement.classList.remove('typing');
+                bioElement.classList.remove('typing'); // Garis berkedip hilang otomatis saat teks selesai
             }
         }
         
@@ -518,7 +529,7 @@
             setTimeout(typeWriter, 500);
         });
 
-        // 3. Logika Kursor Kustom & Spotlight (Khusus PC)
+        // Logika Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
