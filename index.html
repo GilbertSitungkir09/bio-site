@@ -75,6 +75,29 @@
             100% { transform: translateX(-50%); }
         }
 
+        /* === EFEK SALJU / BINTANG BERJATUHAN (SNOW/STAR EFFECT) === */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) translateX(20px);
+                opacity: 0.2;
+            }
+        }
+
         /* === KONTRAK UTAMA HALAMAN === */
         .container {
             width: 100%;
@@ -135,7 +158,6 @@
         .profile-img-inner img {
             width: 100%;
             height: 100%;
-            /* 'object-position: center top' memastikan bagian atas foto yang selalu ditampilkan di dalam kotak persegi */
             object-fit: cover;
             object-position: center top; 
         }
@@ -303,5 +325,37 @@
 
     </div>
 
+    <!-- SCRIPT JAVASCRIPT UNTUK EFEK BINTANG / SALJU BERJATUHAN OTOMATIS -->
+    <script>
+        function createSnowflake() {
+            const snow = document.createElement('div');
+            snow.classList.add('snowflake');
+            
+            // Ukuran acak butiran salju/bintang
+            const size = Math.random() * 4 + 2 + 'px';
+            snow.style.width = size;
+            snow.style.height = size;
+            
+            // Posisi awal horizontal acak
+            snow.style.left = Math.random() * window.innerWidth + 'px';
+            
+            // Kecepatan jatuh acak
+            const duration = Math.random() * 5 + 3 + 's';
+            snow.style.animationDuration = duration;
+            
+            // Tingkat transparansi acak
+            snow.style.opacity = Math.random() * 0.7 + 0.3;
+            
+            document.body.appendChild(snow);
+            
+            // Hapus elemen setelah animasi selesai agar memori tetap ringan
+            setTimeout(() => {
+                snow.remove();
+            }, parseFloat(duration) * 1000);
+        }
+
+        // Interval pembuatan partikel salju secara terus-menerus
+        setInterval(createSnowflake, 150);
+    </script>
 </body>
 </html>
