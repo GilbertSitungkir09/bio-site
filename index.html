@@ -90,54 +90,52 @@
             margin-bottom: 25px;
         }
 
-        /* === BINGKAI LUAR (HANYA BINGKAI INI YANG BERGERAK) === */
-        .profile-img-wrapper {
-            width: 140px;
-            height: 170px;
-            border-radius: 12px;
-            /* Menggunakan overflow hidden agar sisi foto di dalam tertutup saat bingkai miring */
-            overflow: hidden; 
-            margin: 0 auto 15px auto;
-            border: 3px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            background-color: #fff;
-            
-            /* Titik tumpu ayunan berada di bagian tengah-atas agar efek goyangannya natural */
-            transform-origin: center top; 
-            animation: swayFrame 5s ease-in-out infinite;
+        /* === BINGKAI FOTO PERSEGI DENGAN EFEK RUNNING LED WARNA-WARNI === */
+        .profile-img-container {
             position: relative;
+            width: 180px;  /* Ukuran foto dibuat lebih besar */
+            height: 180px; /* Persegi simetris (1:1) */
+            margin: 0 auto 18px auto;
+            border-radius: 16px;
+            padding: 4px; /* Ketebalan garis berjalan */
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        /* Animasi miring pelan ke kiri dan ke kanan */
-        @keyframes swayFrame {
+        /* Efek Gradient Warna-Warni Berputar Mengelilingi Bingkai */
+        .profile-img-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000);
+            animation: rotateLed 4s linear infinite;
+            z-index: 1;
+        }
+
+        /* Keyframes untuk memutar lampu LED mengelilingi kotak */
+        @keyframes rotateLed {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(-4deg); } /* Miring ke kiri (menutupi sebagian sisi kanan foto) */
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(4deg); }  /* Miring ke kanan (menutupi sebagian sisi kiri foto) */
-            100% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* === FOTO DI DALAM (POSISI DIAM, BERKEBALIKAN DENGAN BINGKAI) === */
-        .profile-img-wrapper img {
+        /* Lapisan dalam tempat foto diletakkan agar tetap diam dan rapi berbentuk persegi */
+        .profile-img-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            background-color: #fff;
+            z-index: 2;
+        }
+
+        .profile-img-inner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            
-            /* Memberikan animasi tandingan berlawanan arah agar foto tetap diam tegak */
-            transform-origin: center top;
-            animation: counterSway 5s ease-in-out infinite;
-        }
-
-        /* Keyframes tandingan agar foto tidak ikut miring */
-        @keyframes counterSway {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(4deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(-4deg); }
-            100% { transform: rotate(0deg); }
         }
 
         .profile-name {
@@ -248,10 +246,12 @@
     <!-- Konten Utama -->
     <div class="container">
         
-        <!-- Bagian Profil (Bingkai Goyang, Foto Tetap Diam) -->
+        <!-- Bagian Profil: Kotak Persegi Lebih Besar dengan Efek Bingkai Running LED Warna-Warni -->
         <div class="profile-card">
-            <div class="profile-img-wrapper">
-                <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop'">
+            <div class="profile-img-container">
+                <div class="profile-img-inner">
+                    <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop'">
+                </div>
             </div>
             <h1 class="profile-name">Gilbert Situngkir</h1>
             <p class="profile-bio">YTTA</p>
@@ -291,7 +291,7 @@
                 </div>
                 <div class="link-content">
                     <span class="link-title">Saweria / Dukungan</span>
-                    <span class="link-desc">Dukung dengan trakteer kopi</span>
+                    <span class="link-desc">Dukung kreator dengan trakteer kopi</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
