@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio Site - Professional</title>
+    <title>Bio Site - Gilbert Situngkir</title>
     <!-- Memuat Google Fonts (Poppins) -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@450;500;600;700&display=swap" rel="stylesheet">
-    <!-- Memuat FontAwesome untuk ikon -->
+    <!-- Memuat FontAwesome untuk ikon media sosial -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -48,7 +48,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            opacity: 0.22; /* Dibuat pas agar teks background terlihat jelas namun tidak mengganggu */
+            opacity: 0.22; /* Transparansi teks background */
             pointer-events: none;
         }
 
@@ -60,7 +60,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #1a1a1a; /* Warna teks gelap agar kontras dengan kertas terang */
+            color: #1a1a1a;
             animation: scrollText 22s linear infinite;
         }
 
@@ -90,10 +90,10 @@
             z-index: 2; /* Berada di atas background */
         }
 
-        /* === FOTO PROFIL (MEMANGGIL foto.jpg) === */
+        /* === BAGIAN FOTO PROFIL === */
         .profile-card {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .profile-img-wrapper {
@@ -128,47 +128,19 @@
             font-weight: 500;
         }
 
-        /* === IKON SOSIAL MEDIA KECIL DI ATAS KOLOM === */
-        .social-links-top {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .social-links-top a {
-            width: 38px;
-            height: 38px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #222;
-            font-size: 15px;
-            text-decoration: none;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            transition: all 0.25s ease;
-        }
-
-        .social-links-top a:hover {
-            background: #222;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        /* === KOTAK KOLOM TAUTAN (DISCORD & INSTAGRAM) === */
+        /* === KOTAK KOLOM TAUTAN (LINK SECTION) === */
+        /* Bagian ini menampung semua kolom tautan ke bawah */
         .links-section {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 14px; /* Jarak spasi antar kolom */
         }
 
+        /* Desain dasar setiap 1 buah kolom tautan */
         .link-item {
             display: flex;
             align-items: center;
-            /* Efek semi-transparan kaca elegan di atas kertas */
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -181,13 +153,14 @@
             transition: all 0.3s ease;
         }
 
+        /* Efek saat kursor menyentuh/mengarahkan ke kolom */
         .link-item:hover {
             background: rgba(255, 255, 255, 0.95);
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
 
-        /* Ikon dalam kotak link */
+        /* Kotak Ikon di sebelah kiri dalam kolom */
         .link-icon-box {
             font-size: 22px;
             margin-right: 15px;
@@ -195,10 +168,12 @@
             text-align: center;
         }
 
-        .link-icon-box.discord { color: #5865F2; }
-        .link-icon-box.instagram { color: #E4405F; }
+        /* Warna khusus ikon berdasarkan platform */
+        .link-icon-box.discord { color: #5865F2; }       /* Warna biru Discord */
+        .link-icon-box.instagram { color: #E4405F; }    /* Warna pink/merah Instagram */
+        .link-icon-box.saweria { color: #FFC107; }      /* Warna kuning emas Saweria */
 
-        /* Teks dalam kotak link */
+        /* Area Teks (Judul dan Deskripsi) di tengah kolom */
         .link-content {
             flex-grow: 1;
             display: flex;
@@ -216,7 +191,7 @@
             color: #666;
         }
 
-        /* Panah kecil di ujung kanan */
+        /* Ikon panah kecil di ujung kanan kolom */
         .link-arrow-icon {
             font-size: 12px;
             color: #555;
@@ -226,14 +201,6 @@
         .link-item:hover .link-arrow-icon {
             transform: translateX(3px);
         }
-
-        /* Footer */
-        .footer-note {
-            margin-top: 35px;
-            font-size: 11px;
-            color: #555;
-            font-weight: 500;
-        }
     </style>
 </head>
 <body>
@@ -242,7 +209,6 @@
     <!-- LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) -->
     <!-- ========================================== -->
     <div class="bg-running-container">
-        <!-- Anda bisa mengganti teks di dalam <span> sesuai keinginan -->
         <div class="bg-running-row">
             <span>Gilbertt &bull; Gilbertt &bull; Gilbertt &bull; Gilbertt &bull;</span>
             <span>Gilbertt &bull; Gilbertt &bull; Gilbertt &bull; Gilbertt &bull;</span>
@@ -266,29 +232,24 @@
     <!-- ========================================== -->
     <div class="container">
         
-        <!-- BAGIAN FOTO PROFIL (Mengambil file foto.jpg) -->
+        <!-- BAGIAN FOTO PROFIL (Mengambil file foto.jpg lokal) -->
         <div class="profile-card">
             <div class="profile-img-wrapper">
-                <!-- File foto lokal Anda bernama foto.jpg -->
                 <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop'">
             </div>
             <h1 class="profile-name">Gilbert Situngkir</h1>
             <p class="profile-bio">YTTA</p>
         </div>
 
-        <!-- IKON SOSIAL MEDIA KECIL DI ATAS -->
-        <div class="social-links-top">
-            <a href="https://instagram.com/username_anda" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://discord.gg/link_discord_anda" target="_blank" title="Discord"><i class="fa-brands fa-discord"></i></a>
-        </div>
-
         <!-- ========================================== -->
-        <!-- 2 SAMPEL KOLOM TAUTAN (DISCORD & INSTAGRAM) -->
+        <!-- KELOMPOK KOLOM TAUTAN (LINK SECTIONS)       -->
+        <!-- * CATATAN UNTUK MENAMBAH KOLOM BARU:       -->
+        <!--   Cukup salin elemen <a href="..." ...>    -->
+        <!--   di bawah ini lalu tempel di bawahnya.    -->
         <!-- ========================================== -->
         <div class="links-section">
             
-            <!-- Kolom 1: Discord -->
-            <!-- Ubah link di dalam atribut href="..." dengan link Discord Anda -->
+            <!-- KOTAK KOLOM 1: DISCORD -->
             <a href="https://discord.gg/nUSm4pQnYs" class="link-item" target="_blank">
                 <div class="link-icon-box discord">
                     <i class="fa-brands fa-discord"></i>
@@ -302,8 +263,7 @@
                 </div>
             </a>
 
-            <!-- Kolom 2: Instagram -->
-            <!-- Ubah link di dalam atribut href="..." dengan link Instagram Anda -->
+            <!-- KOTAK KOLOM 2: INSTAGRAM -->
             <a href="https://www.instagram.com/gilbertt_situngkir/" class="link-item" target="_blank">
                 <div class="link-icon-box instagram">
                     <i class="fa-brands fa-instagram"></i>
@@ -316,23 +276,21 @@
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </a>
-           <a href="https://saweria.co/Berrtt/" class="link-item" target="_blank">
-                <div class="link-icon-box instagram">
-                    <i class="fa-brands fa-instagram"></i>
+
+            <!-- KOTAK KOLOM 3: SAWERIA -->
+            <a href="https://saweria.co/Berrtt/" class="link-item" target="_blank">
+                <div class="link-icon-box saweria">
+                    <i class="fa-solid fa-mug-hot"></i>
                 </div>
                 <div class="link-content">
-                    <span class="link-title">Instagram Official</span>
-                    <span class="link-desc">Ikuti aktivitas keseharian saya</span>
+                    <span class="link-title">Saweria / Dukungan</span>
+                    <span class="link-desc">Dukung kreator dengan trakteer kopi</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </a>
-        </div>
 
-        <!-- Footer -->
-        <div class="footer-note">
-            &copy; 2026 &bull; All Rights Reserved
         </div>
 
     </div>
