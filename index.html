@@ -107,6 +107,61 @@
             transform: translateY(0);
         }
 
+        /* === TOMBOL BAGIKAN DI KANAN BAWAH === */
+        .floating-share-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #222;
+            font-size: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            z-index: 9996;
+            transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .floating-share-btn:hover {
+            background: rgba(255, 255, 255, 0.98);
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            color: #000;
+        }
+
+        /* Tooltip Notifikasi Berhasil Disalin */
+        .share-tooltip {
+            position: fixed;
+            bottom: 35px;
+            right: 82px;
+            background: rgba(22, 22, 22, 0.85);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 9995;
+        }
+
+        .share-tooltip.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
         /* === EFEK KHUSUS PC/LAPTOPS === */
         @media (hover: hover) and (pointer: fine) {
             * { cursor: none; }
@@ -485,6 +540,12 @@
         <div class="loader-spinner"></div>
     </div>
 
+    <!-- Tombol Bagikan di Kanan Bawah -->
+    <div class="floating-share-btn" id="share-btn" title="Bagikan Bio Site">
+        <i class="fa-solid fa-share-nodes"></i>
+    </div>
+    <div class="share-tooltip" id="share-tooltip">Tautan Tersalin!</div>
+
     <!-- Elemen Visual Tambahan -->
     <div class="ambient-spotlight" id="ambient-spotlight"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
@@ -581,7 +642,42 @@
 
     <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // 1. Logika Custom Favicon Animasi (Emoji Berkedip di Tab Browser)
+        // 1. Logika Tombol Bagikan (Share / Copy Link)
+        const shareBtn = document.getElementById('share-btn');
+        const shareTooltip = document.getElementById('share-tooltip');
+
+        shareBtn.addEventListener('click', async () => {
+            const shareData = {
+                title: document.title,
+                text: 'Kunjungi Bio Site resmi Gilbert Situngkir!',
+                url: window.location.href
+            };
+
+            try {
+                // Jika dibuka di HP yang mendukung Web Share API bawaan
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    // Fallback untuk PC / browser yang tidak mendukung: Salin ke Clipboard
+                    await navigator.clipboard.writeText(window.location.href);
+                    showTooltip();
+                }
+            } catch (err) {
+                // Jika dibatalkan user atau gagal, fallback salin manual ke clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showTooltip();
+                }).catch(e => console.log('Gagal membagikan', e));
+            }
+        });
+
+        function showTooltip() {
+            shareTooltip.classList.add('show');
+            setTimeout(() => {
+                shareTooltip.classList.remove('show');
+            }, 2000);
+        }
+
+        // 2. Logika Custom Favicon Animasi (Emoji Berkedip di Tab Browser)
         const faviconEmojis = ['⚡', '💻', '🟢', '✨'];
         let emojiIndex = 0;
         setInterval(() => {
@@ -591,7 +687,7 @@
             document.getElementById('dynamic-favicon').href = `data:image/svg+xml,${svgIcon}`;
         }, 1500);
 
-        // 2. Deteksi Bahasa & Jam Real-Time
+        // 3. Deteksi Bahasa & Jam Real-Time
         const userLang = navigator.language || navigator.userLanguage || 'id';
         const isIndonesian = userLang.startsWith('id');
 
@@ -627,46 +723,42 @@
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // 3. Logika Animasi Ketik (Typewriter) dengan Mulai dari Kosong Bersih
+        // 4. Logika Animasi Ketik (Typewriter) dengan Mulai dari Kosong Bersih
         const bioElement = document.getElementById('typewriter-bio');
         let targetGreeting = "";
         let charIndex = 0;
 
         function typeWriter() {
             if (charIndex === 0) {
-                bioElement.innerHTML = ""; // Pastikan benar-benar kosong saat dimulai
+                bioElement.innerHTML = ""; 
             }
             
             if (charIndex < targetGreeting.length) {
                 bioElement.innerHTML += targetGreeting.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 90); // Kecepatan ketik per huruf
+                setTimeout(typeWriter, 90); 
             } else {
-                bioElement.classList.remove('typing'); // Garis berkedip hilang otomatis saat selesai
+                bioElement.classList.remove('typing'); 
             }
         }
 
-        // 4. Logika Transisi Masuk (Page Loader) dengan Jeda Sinkronisasi Sempurna
+        // 5. Logika Transisi Masuk (Page Loader) dengan Jeda Sinkronisasi Sempurna
         window.addEventListener('load', () => {
             const loader = document.getElementById('page-loader');
             
-            // Ambil teks sapaan terbaru
             targetGreeting = updateClockAndGreeting();
 
             setTimeout(() => {
-                // Tirai loader mulai terangkat naik
                 loader.classList.add('loaded');
                 document.body.classList.add('loaded');
                 
-                // Jeda waktu (800ms) diberikan agar tirai terbuka sepenuhnya bersih 
-                // sebelum huruf pertama dari sapaan mulai diketik dari kosong.
                 setTimeout(() => {
                     typeWriter();
                 }, 800); 
             }, 600);
         });
 
-        // 5. Kursor Kustom & Spotlight (Khusus PC)
+        // 6. Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
@@ -700,7 +792,7 @@
             }
             renderCursor();
 
-            const interactables = document.querySelectorAll('a, .tilt-card');
+            const interactables = document.querySelectorAll('a, .tilt-card, .floating-share-btn');
             interactables.forEach(el => {
                 el.addEventListener('mouseenter', () => {
                     ring.style.width = '55px';
