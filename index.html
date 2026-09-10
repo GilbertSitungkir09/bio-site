@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Bio Site</title>
-    <!-- Memuat Google Fonts (Poppins) untuk tipografi yang rapi dan modern -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Memuat FontAwesome untuk ikon sosial media -->
+    <title>Bio Site - Professional</title>
+    <!-- Memuat Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@450;500;600;700&display=swap" rel="stylesheet">
+    <!-- Memuat FontAwesome untuk ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* === PENGATURAN DASAR & RESET === */
+        /* === PENGATURAN DASAR === */
         * {
             margin: 0;
             padding: 0;
@@ -19,8 +19,13 @@
         }
 
         body {
-            background-color: #1a1a1a;
-            color: #ffffff;
+            /* Warna dasar krem ala kertas */
+            background-color: #d6d0c7;
+            /* Menggunakan gambar tekstur kertas kusut/kuno di latar belakang */
+            background-image: url('https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=1200&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,7 +36,7 @@
             overflow-x: hidden;
         }
 
-        /* === LATAR BELAKANG DENGAN TEKS BERJALAN HORIZONTAL (RUNNING BACKGROUND) === */
+        /* === LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT HORIZONTAL) === */
         .bg-running-container {
             position: absolute;
             top: 0;
@@ -39,11 +44,11 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: -2; /* Menempatkan background di lapisan paling belakang */
+            z-index: 0; /* Berada di belakang konten utama */
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            opacity: 0.08; /* Tingkat transparansi agar tidak mengganggu bacaan konten utama */
+            opacity: 0.22; /* Dibuat pas agar teks background terlihat jelas namun tidak mengganggu */
             pointer-events: none;
         }
 
@@ -51,73 +56,55 @@
         .bg-running-row {
             display: flex;
             white-space: nowrap;
-            font-size: 4vw;
+            font-size: 5vw;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            animation: scrollText 25s linear infinite; /* Kecepatan dan durasi animasi berjalan */
+            letter-spacing: 2px;
+            color: #1a1a1a; /* Warna teks gelap agar kontras dengan kertas terang */
+            animation: scrollText 22s linear infinite;
         }
 
-        /* Mengatur arah atau variasi kecepatan baris ganjil/genap agar dinamis */
+        /* Mengatur arah berlawanan untuk baris genap agar dinamis */
         .bg-running-row:nth-child(even) {
             animation-direction: reverse;
-            animation-duration: 30s;
+            animation-duration: 27s;
         }
 
         .bg-running-row span {
-            margin-right: 40px;
+            margin-right: 30px;
         }
 
-        /* Animasi keyframes untuk pergerakan horizontal */
+        /* Animasi pergerakan ke samping (horizontal) */
         @keyframes scrollText {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        /* Lapisan overlay gelap tipis di atas background */
-        .bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(15,15,15,0.9), rgba(30,30,30,0.8));
-            z-index: -1;
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
         /* === KONTRAK UTAMA / WRAPPER WEBSITE === */
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1;
+            z-index: 2; /* Berada di atas background */
         }
 
-        /* === FOTO PROFIL (MEMANGGIL file foto.jpg) === */
+        /* === FOTO PROFIL (MEMANGGIL foto.jpg) === */
         .profile-card {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .profile-img-wrapper {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%; /* Membuat foto berbentuk lingkaran profesional */
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
             overflow: hidden;
-            margin: 0 auto 15px auto;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease;
-        }
-
-        .profile-img-wrapper:hover {
-            transform: scale(1.05); /* Efek sedikit membesar saat kursor mendekat */
+            margin: 0 auto 12px auto;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            background-color: #fff;
         }
 
         .profile-img-wrapper img {
@@ -127,45 +114,47 @@
         }
 
         .profile-name {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            color: #f5f5f5;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #222;
+            text-transform: uppercase;
+            margin-bottom: 4px;
         }
 
         .profile-bio {
-            font-size: 13px;
-            color: #aaa;
-            font-weight: 300;
+            font-size: 12px;
+            color: #555;
+            font-weight: 500;
         }
 
         /* === IKON SOSIAL MEDIA KECIL DI ATAS KOLOM === */
         .social-links-top {
             display: flex;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .social-links-top a {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 16px;
+            color: #222;
+            font-size: 15px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.25s ease;
         }
 
         .social-links-top a:hover {
-            background: #fff;
-            color: #000;
-            transform: translateY(-3px);
+            background: #222;
+            color: #fff;
+            transform: translateY(-2px);
         }
 
         /* === KOTAK KOLOM TAUTAN (DISCORD & INSTAGRAM) === */
@@ -173,35 +162,32 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         .link-item {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px); /* Efek kaca buram premium */
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            /* Efek semi-transparan kaca elegan di atas kertas */
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
             padding: 14px 20px;
-            border-radius: 14px;
+            border-radius: 16px;
             text-decoration: none;
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
+            color: #222;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
         }
 
-        /* Efek hover interaktif pada kotak link */
         .link-item:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
 
-        /* Ikon di dalam kotak link */
+        /* Ikon dalam kotak link */
         .link-icon-box {
             font-size: 22px;
             margin-right: 15px;
@@ -209,11 +195,10 @@
             text-align: center;
         }
 
-        /* Warna khas ikon */
         .link-icon-box.discord { color: #5865F2; }
         .link-icon-box.instagram { color: #E4405F; }
 
-        /* Teks informasi di dalam kotak link */
+        /* Teks dalam kotak link */
         .link-content {
             flex-grow: 1;
             display: flex;
@@ -221,88 +206,80 @@
         }
 
         .link-title {
-            font-size: 15px;
-            font-weight: 500;
-            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
         }
 
         .link-desc {
             font-size: 11px;
-            color: #999;
+            color: #666;
         }
 
-        /* Ikon panah kecil di ujung kanan */
+        /* Panah kecil di ujung kanan */
         .link-arrow-icon {
-            font-size: 13px;
-            color: #777;
+            font-size: 12px;
+            color: #555;
             transition: transform 0.2s ease;
         }
 
         .link-item:hover .link-arrow-icon {
             transform: translateX(3px);
-            color: #fff;
         }
 
-        /* === FOOTER KECIL DI BAWAH === */
+        /* Footer */
         .footer-note {
-            margin-top: 40px;
+            margin-top: 35px;
             font-size: 11px;
-            color: #666;
-            letter-spacing: 0.5px;
+            color: #555;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
     <!-- ========================================== -->
-    <!-- LATAR BELAKANG DENGAN TEKS BERJALAN (MARQUEE) -->
+    <!-- LATAR BELAKANG TEKS BERJALAN (RUNNING TEXT) -->
     <!-- ========================================== -->
     <div class="bg-running-container">
-        <!-- Baris 1 -->
+        <!-- Anda bisa mengganti teks di dalam <span> sesuai keinginan -->
         <div class="bg-running-row">
-            <span>YOUR NAME &bull; DEVELOPER &bull; CREATOR &bull;</span>
-            <span>YOUR NAME &bull; DEVELOPER &bull; CREATOR &bull;</span>
+            <span>LEVICHE &bull; CREATOR &bull; DEVELOPER &bull; SOCIAL MEDIA &bull;</span>
+            <span>LEVICHE &bull; CREATOR &bull; DEVELOPER &bull; SOCIAL MEDIA &bull;</span>
         </div>
-        <!-- Baris 2 -->
         <div class="bg-running-row">
-            <span>CONNECT WITH ME &bull; DISCORD &bull; INSTAGRAM &bull;</span>
-            <span>CONNECT WITH ME &bull; DISCORD &bull; INSTAGRAM &bull;</span>
+            <span>DISCORD &bull; INSTAGRAM &bull; COMMUNITY &bull; PROFILE &bull;</span>
+            <span>DISCORD &bull; INSTAGRAM &bull; COMMUNITY &bull; PROFILE &bull;</span>
         </div>
-        <!-- Baris 3 -->
         <div class="bg-running-row">
-            <span>PORTFOLIO &bull; SOCIAL MEDIA &bull; BIO SITE &bull;</span>
-            <span>PORTFOLIO &bull; SOCIAL MEDIA &bull; BIO SITE &bull;</span>
+            <span>WELCOME &bull; PORTFOLIO &bull; CONNECT WITH ME &bull;</span>
+            <span>WELCOME &bull; PORTFOLIO &bull; CONNECT WITH ME &bull;</span>
         </div>
-        <!-- Baris 4 -->
         <div class="bg-running-row">
-            <span>WELCOME TO MY PROFILE &bull; ENJOY &bull;</span>
-            <span>WELCOME TO MY PROFILE &bull; ENJOY &bull;</span>
+            <span>LEVICHE &bull; CREATOR &bull; DEVELOPER &bull; SOCIAL MEDIA &bull;</span>
+            <span>LEVICHE &bull; CREATOR &bull; DEVELOPER &bull; SOCIAL MEDIA &bull;</span>
         </div>
     </div>
-    
-    <!-- Efek gelap transparan penyeimbang background -->
-    <div class="bg-overlay"></div>
 
     <!-- ========================================== -->
-    <!-- KONTEN UTAMA WEBSITE -->
+    <!-- KONTEN UTAMA HALAMAN -->
     <!-- ========================================== -->
     <div class="container">
         
-        <!-- BAGIAN FOTO PROFIL (Memanggil file foto.jpg) -->
+        <!-- BAGIAN FOTO PROFIL (Mengambil file foto.jpg) -->
         <div class="profile-card">
             <div class="profile-img-wrapper">
-                <!-- Pastikan Anda menaruh file gambar dengan nama "foto.jpg" di repository GitHub Anda -->
-                <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=500&auto=format&fit=crop'">
+                <!-- File foto lokal Anda bernama foto.jpg -->
+                <img src="foto.jpg" alt="Foto Profil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop'">
             </div>
             <h1 class="profile-name">Nama Anda</h1>
             <p class="profile-bio">Digital Creator & Developer</p>
         </div>
 
-        <!-- IKON SOSIAL MEDIA UTAMA DI ATAS -->
+        <!-- IKON SOSIAL MEDIA KECIL DI ATAS -->
         <div class="social-links-top">
             <a href="https://instagram.com/username_anda" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://discord.gg/link_discord_anda" target="_blank" title="Discord"><i class="fa-brands fa-discord"></i></a>
-            <a href="https://github.com/username_anda" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
         </div>
 
         <!-- ========================================== -->
@@ -311,7 +288,7 @@
         <div class="links-section">
             
             <!-- Kolom 1: Discord -->
-            <!-- Ganti href dengan link undangan server atau profil Discord Anda -->
+            <!-- Ubah link di dalam atribut href="..." dengan link Discord Anda -->
             <a href="https://discord.gg/masukkan-link-discord-anda" class="link-item" target="_blank">
                 <div class="link-icon-box discord">
                     <i class="fa-brands fa-discord"></i>
@@ -326,7 +303,7 @@
             </a>
 
             <!-- Kolom 2: Instagram -->
-            <!-- Ganti href dengan link profil Instagram Anda -->
+            <!-- Ubah link di dalam atribut href="..." dengan link Instagram Anda -->
             <a href="https://instagram.com/masukkan-username-ig-anda" class="link-item" target="_blank">
                 <div class="link-icon-box instagram">
                     <i class="fa-brands fa-instagram"></i>
@@ -342,7 +319,7 @@
 
         </div>
 
-        <!-- Footer Kecil -->
+        <!-- Footer -->
         <div class="footer-note">
             &copy; 2026 &bull; All Rights Reserved
         </div>
