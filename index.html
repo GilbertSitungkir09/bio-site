@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio Site - Gilbert Situngkir</title>
-    <!-- Memuat Google Fonts (Poppins) -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@450;500;600;700&display=swap" rel="stylesheet">
+    <!-- Memuat Google Fonts (Poppins & Fira Code untuk jam digital) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Poppins:wght@450;500;600;700&display=swap" rel="stylesheet">
     <!-- Memuat FontAwesome untuk ikon media sosial -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -36,13 +36,10 @@
             user-select: none;
         }
 
-        /* === EFEK KHUSUS PC/LAPTOPS (DI HP AKAN OTOMATIS DINONAKTIFKAN) === */
+        /* === EFEK KHUSUS PC/LAPTOPS === */
         @media (hover: hover) and (pointer: fine) {
-            * {
-                cursor: none; /* Menyembunyikan kursor default hanya di PC/Laptop */
-            }
+            * { cursor: none; }
 
-            /* Ambient Glow / Spotlight khusus PC */
             .ambient-spotlight {
                 position: fixed;
                 top: 0;
@@ -57,7 +54,6 @@
                 transition: width 0.3s, height 0.3s;
             }
 
-            /* Kursor Kustom Titik & Cincin khusus PC */
             .cursor-dot {
                 position: fixed;
                 top: 0;
@@ -88,7 +84,6 @@
             }
         }
 
-        /* Jika dibuka di HP (Touch Screen), elemen kustom kursor disembunyikan total */
         @media (hover: none) and (pointer: coarse) {
             .ambient-spotlight, .cursor-dot, .cursor-ring {
                 display: none !important;
@@ -183,6 +178,34 @@
             justify-content: center;
         }
 
+        /* === WIDGET JAM DIGITAL & SAPAAN DI ATAS PROFIL === */
+        .live-clock-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .live-clock-box i {
+            color: #444;
+            font-size: 12px;
+        }
+
+        .clock-text {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            color: #333;
+            letter-spacing: 0.5px;
+        }
+
         .profile-card {
             text-align: center;
             margin-bottom: 18px;
@@ -243,10 +266,21 @@
             margin-bottom: 2px;
         }
 
+        /* === EFEK KETIK (TYPEWRITER) PADA BIO SAPAAN WAKTU === */
         .profile-bio {
             font-size: 11px;
             color: #555;
             font-weight: 500;
+            min-height: 16px;
+            display: inline-block;
+            border-right: 2px solid #555; /* Garis kursor ketik */
+            white-space: nowrap;
+            animation: blinkCursor 0.7s infinite;
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: #555; }
         }
 
         /* === KOTAK KOLOM TAUTAN (DENGAN EFEK HOVER ZOOM & 3D TILT) === */
@@ -370,6 +404,12 @@
     <!-- Konten Utama -->
     <div class="container">
         
+        <!-- WIDGET JAM DIGITAL & TANGGAL (POSISI DI ATAS PROFIL) -->
+        <div class="live-clock-box">
+            <i class="fa-regular fa-clock"></i>
+            <span class="clock-text" id="live-clock">Memuat Waktu...</span>
+        </div>
+
         <!-- Bagian Profil -->
         <div class="profile-card">
             <div class="profile-img-container">
@@ -378,7 +418,8 @@
                 </div>
             </div>
             <h1 class="profile-name">Gilbert Situngkir</h1>
-            <p class="profile-bio">YTTA</p>
+            <!-- Bio dengan Efek Ketik Sapaan Waktu -->
+            <p class="profile-bio" id="typewriter-bio"></p>
         </div>
 
         <!-- Kolom Tautan dengan Efek 3D Tilt -->
@@ -425,8 +466,58 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT -->
+    <!-- SCRIPT JAVASCRIPT: JAM DIGITAL, TYPEWRITER SAPAAN, KURSOR & TILT -->
     <script>
+        // 1. Logika Jam Digital Real-Time & Sapaan Waktu Otomatis
+        function updateClockAndGreeting() {
+            const now = new Date();
+            
+            // Format Jam: HH:MM:SS
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // Format Tanggal Singkat
+            const options = { weekday: 'short', day: 'numeric', month: 'short' };
+            const dateStr = now.toLocaleDateString('id-ID', options);
+            
+            document.getElementById('live-clock').innerText = `${dateStr} • ${hours}:${minutes}:${seconds}`;
+
+            // Menentukan Kalimat Berdasarkan Waktu Perangkat
+            const hr = now.getHours();
+            let greeting = "Selamat Malam 🌙";
+            if (hr >= 4 && hr < 11) {
+                greeting = "Selamat Pagi 🌅";
+            } else if (hr >= 11 && hr < 15) {
+                greeting = "Selamat Siang ☀️";
+            } else if (hr >= 15 && hr < 18) {
+                greeting = "Selamat Sore 🌤️";
+            }
+            return greeting;
+        }
+
+        // Jalankan jam setiap detik
+        setInterval(updateClockAndGreeting, 1000);
+        
+        // 2. Animasi Ketik (Typewriter Effect) untuk Sapaan Waktu saat Buka Web
+        const targetGreeting = updateClockAndGreeting();
+        const bioElement = document.getElementById('typewriter-bio');
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < targetGreeting.length) {
+                bioElement.innerHTML += targetGreeting.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 80); // Kecepatan ketik per huruf (milidetik)
+            }
+        }
+        
+        // Mulai animasi ketik setelah halaman dimuat
+        window.addEventListener('load', () => {
+            setTimeout(typeWriter, 500);
+        });
+
+        // 3. Logika Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
@@ -435,7 +526,6 @@
         let ringX = 0, ringY = 0;
         let spotX = 0, spotY = 0;
 
-        // Hanya jalankan animasi kursor jika perangkat menggunakan mouse (PC/Laptop)
         const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
         if (isDesktop) {
@@ -478,6 +568,7 @@
             });
         }
 
+        // Click Ripple Effect
         window.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
             ripple.classList.add('ripple');
@@ -490,6 +581,7 @@
             }, 600);
         });
 
+        // Partikel Salju/Bintang
         function createSnowflake() {
             const snow = document.createElement('div');
             snow.classList.add('snowflake');
@@ -511,6 +603,7 @@
         }
         setInterval(createSnowflake, 300);
 
+        // Efek 3D Tilt pada Kartu Link
         const cards = document.querySelectorAll('.tilt-card');
         cards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
