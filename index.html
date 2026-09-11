@@ -137,7 +137,6 @@
             color: #000;
         }
 
-        /* Tooltip Notifikasi Berhasil Disalin */
         .share-tooltip {
             position: fixed;
             bottom: 35px;
@@ -544,7 +543,7 @@
     <div class="floating-share-btn" id="share-btn" title="Bagikan Bio Site">
         <i class="fa-solid fa-share-nodes"></i>
     </div>
-    <div class="share-tooltip" id="share-tooltip">Tautan Tersalin!</div>
+    <div class="share-tooltip" id="share-tooltip" data-id="Tautan Tersalin!" data-en="Link Copied!">Tautan Tersalin!</div>
 
     <!-- Elemen Visual Tambahan -->
     <div class="ambient-spotlight" id="ambient-spotlight"></div>
@@ -592,19 +591,19 @@
                 <div class="status-dot" title="Online"></div>
             </div>
             <br>
-            <!-- Bio dengan Efek Ketik Sapaan Waktu Sesuai Bahasa Pengunjung -->
+            <!-- Bio dengan Efek Ketik Sapaan Waktu Otomatis Sesuai Bahasa Pengunjung -->
             <p class="profile-bio typing" id="typewriter-bio"></p>
         </div>
 
-        <!-- Kolom Tautan dengan Efek 3D Tilt -->
+        <!-- Kolom Tautan dengan Sistem Terjemahan Otomatis -->
         <div class="links-section">
             <a href="https://discord.gg/nUSm4pQnYs" class="link-item tilt-card" target="_blank">
                 <div class="link-icon-box discord">
                     <i class="fa-brands fa-discord"></i>
                 </div>
                 <div class="link-content">
-                    <span class="link-title">Discord Community</span>
-                    <span class="link-desc">Bergabung dengan server Discord saya</span>
+                    <span class="link-title" data-id="Discord Community" data-en="Discord Community">Discord Community</span>
+                    <span class="link-desc" data-id="Bergabung dengan server Discord saya" data-en="Join my Discord server">Bergabung dengan server Discord saya</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
@@ -616,8 +615,8 @@
                     <i class="fa-brands fa-instagram"></i>
                 </div>
                 <div class="link-content">
-                    <span class="link-title">Instagram Official</span>
-                    <span class="link-desc">Ikuti aktivitas keseharian saya</span>
+                    <span class="link-title" data-id="Instagram Official" data-en="Instagram Official">Instagram Official</span>
+                    <span class="link-desc" data-id="Ikuti aktivitas keseharian saya" data-en="Follow my daily activities">Ikuti aktivitas keseharian saya</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
@@ -629,8 +628,8 @@
                     <i class="fa-solid fa-mug-hot"></i>
                 </div>
                 <div class="link-content">
-                    <span class="link-title">Saweria / Dukungan</span>
-                    <span class="link-desc">Dukung dengan trakteer kopi</span>
+                    <span class="link-title" data-id="Saweria / Dukungan" data-en="Saweria / Support">Saweria / Dukungan</span>
+                    <span class="link-desc" data-id="Dukung dengan trakteer kopi" data-en="Support me with a coffee">Dukung dengan trakteer kopi</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
@@ -642,28 +641,38 @@
 
     <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // 1. Logika Tombol Bagikan (Share / Copy Link)
+        // 1. Deteksi Bahasa Perangkat Pengunjung (Indonesia vs Internasional)
+        const userLang = navigator.language || navigator.userLanguage || 'id';
+        const isIndonesian = userLang.startsWith('id');
+
+        // Menerapkan terjemahan otomatis pada teks kotak tautan & tooltip
+        document.querySelectorAll('[data-id]').forEach(el => {
+            if (isIndonesian) {
+                el.innerText = el.getAttribute('data-id');
+            } else {
+                el.innerText = el.getAttribute('data-en');
+            }
+        });
+
+        // 2. Logika Tombol Bagikan (Share / Copy Link)
         const shareBtn = document.getElementById('share-btn');
         const shareTooltip = document.getElementById('share-tooltip');
 
         shareBtn.addEventListener('click', async () => {
             const shareData = {
                 title: document.title,
-                text: 'Kunjungi Bio Site resmi Gilbert Situngkir!',
+                text: isIndonesian ? 'Kunjungi Bio Site resmi Gilbert Situngkir!' : 'Check out Gilbert Situngkir official Bio Site!',
                 url: window.location.href
             };
 
             try {
-                // Jika dibuka di HP yang mendukung Web Share API bawaan
                 if (navigator.share) {
                     await navigator.share(shareData);
                 } else {
-                    // Fallback untuk PC / browser yang tidak mendukung: Salin ke Clipboard
                     await navigator.clipboard.writeText(window.location.href);
                     showTooltip();
                 }
             } catch (err) {
-                // Jika dibatalkan user atau gagal, fallback salin manual ke clipboard
                 navigator.clipboard.writeText(window.location.href).then(() => {
                     showTooltip();
                 }).catch(e => console.log('Gagal membagikan', e));
@@ -677,7 +686,7 @@
             }, 2000);
         }
 
-        // 2. Logika Custom Favicon Animasi (Emoji Berkedip di Tab Browser)
+        // 3. Logika Custom Favicon Animasi (Emoji Berkedip di Tab Browser)
         const faviconEmojis = ['⚡', '💻', '🟢', '✨'];
         let emojiIndex = 0;
         setInterval(() => {
@@ -687,10 +696,7 @@
             document.getElementById('dynamic-favicon').href = `data:image/svg+xml,${svgIcon}`;
         }, 1500);
 
-        // 3. Deteksi Bahasa & Jam Real-Time
-        const userLang = navigator.language || navigator.userLanguage || 'id';
-        const isIndonesian = userLang.startsWith('id');
-
+        // 4. Jam Real-Time & Zona Waktu Sesuai Pengunjung
         function updateClockAndGreeting() {
             const now = new Date();
             
@@ -723,7 +729,7 @@
 
         setInterval(updateClockAndGreeting, 1000);
         
-        // 4. Logika Animasi Ketik (Typewriter) dengan Mulai dari Kosong Bersih
+        // 5. Logika Animasi Ketik (Typewriter) Sapaan Waktu
         const bioElement = document.getElementById('typewriter-bio');
         let targetGreeting = "";
         let charIndex = 0;
@@ -742,7 +748,7 @@
             }
         }
 
-        // 5. Logika Transisi Masuk (Page Loader) dengan Jeda Sinkronisasi Sempurna
+        // 6. Logika Transisi Masuk (Page Loader)
         window.addEventListener('load', () => {
             const loader = document.getElementById('page-loader');
             
@@ -758,7 +764,7 @@
             }, 600);
         });
 
-        // 6. Kursor Kustom & Spotlight (Khusus PC)
+        // 7. Kursor Kustom & Spotlight (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
