@@ -207,6 +207,26 @@
                 transform: translate(-50%, -50%);
                 transition: width 0.3s ease-out, height 0.3s ease-out, border-color 0.3s ease;
             }
+
+            /* Jejak Kursor Interaktif (Mouse Trail) */
+            .cursor-trail {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 6px;
+                height: 6px;
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9997;
+                transform: translate(-50%, -50%);
+                animation: fadeTrail 0.5s linear forwards;
+            }
+
+            @keyframes fadeTrail {
+                0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+                100% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+            }
         }
 
         @media (hover: none) and (pointer: coarse) {
@@ -764,7 +784,7 @@
             }, 600);
         });
 
-        // 7. Kursor Kustom & Spotlight (Khusus PC)
+        // 7. Kursor Kustom, Spotlight & Jejak Kursor (Khusus PC)
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const spotlight = document.getElementById('ambient-spotlight');
@@ -781,6 +801,16 @@
                 mouseY = e.clientY;
                 dot.style.left = `${mouseX}px`;
                 dot.style.top = `${mouseY}px`;
+
+                // Membuat efek jejak partikel kursor (Mouse Trail)
+                if (Math.random() < 0.3) {
+                    const trail = document.createElement('div');
+                    trail.classList.add('cursor-trail');
+                    trail.style.left = `${mouseX}px`;
+                    trail.style.top = `${mouseY}px`;
+                    document.body.appendChild(trail);
+                    setTimeout(() => trail.remove(), 500);
+                }
             });
 
             function renderCursor() {
