@@ -208,7 +208,6 @@
                 transition: width 0.3s ease-out, height 0.3s ease-out, border-color 0.3s ease;
             }
 
-            /* Jejak Kursor Interaktif (Mouse Trail) */
             .cursor-trail {
                 position: fixed;
                 top: 0;
@@ -502,6 +501,7 @@
         .link-icon-box.discord { color: #5865F2; }
         .link-icon-box.instagram { color: #E4405F; }
         .link-icon-box.saweria { color: #FFC107; }
+        .link-icon-box.bot-invite { color: #5865F2; }
 
         .link-content {
             flex-grow: 1;
@@ -624,6 +624,20 @@
                 <div class="link-content">
                     <span class="link-title" data-id="Discord Community" data-en="Discord Community">Discord Community</span>
                     <span class="link-desc" data-id="Bergabung dengan server Discord saya" data-en="Join my Discord server">Bergabung dengan server Discord saya</span>
+                </div>
+                <div class="link-arrow-icon">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <!-- Kolom Tautan Unduh / Invite Bot Discord -->
+            <a href="https://discord.com/oauth2/authorize?client_id=1494908048249065522&permissions=8&integration_type=0&scope=bot" class="link-item tilt-card" target="_blank">
+                <div class="link-icon-box bot-invite">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="link-content">
+                    <span class="link-title" data-id="Invite Discord Bot" data-en="Invite Discord Bot">Invite Discord Bot</span>
+                    <span class="link-desc" data-id="Undang bot discord ke server Anda" data-en="Add discord bot to your server">Undang bot discord ke server Anda</span>
                 </div>
                 <div class="link-arrow-icon">
                     <i class="fa-solid fa-chevron-right"></i>
@@ -802,7 +816,6 @@
                 dot.style.left = `${mouseX}px`;
                 dot.style.top = `${mouseY}px`;
 
-                // Membuat efek jejak partikel kursor (Mouse Trail)
                 if (Math.random() < 0.3) {
                     const trail = document.createElement('div');
                     trail.classList.add('cursor-trail');
